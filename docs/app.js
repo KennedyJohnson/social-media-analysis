@@ -10,17 +10,6 @@
   const hourLabel = (h) => (h % 12 || 12) + (h < 12 ? "am" : "pm");
   const $ = (id) => document.getElementById(id);
 
-  // ---- theme toggle -------------------------------------------------------
-  const themeBtn = $("theme");
-  const setTheme = (t) => {
-    document.documentElement.setAttribute("data-theme", t);
-    themeBtn.textContent = t === "dark" ? "Light mode" : "Dark mode";
-    try { localStorage.setItem("theme", t); } catch (e) { /* storage unavailable */ }
-  };
-  let saved = null;
-  try { saved = localStorage.getItem("theme"); } catch (e) { /* storage unavailable */ }
-  setTheme(saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
-  themeBtn.onclick = () => setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
 
   // ---- helpers --------------------------------------------------------------
   function el(tag, attrs, parent) {
@@ -282,6 +271,34 @@
     });
   }
 
+  // ---- 06 timeline: likes growth with Instagram's changes ------------------------------
+  (function timeline() {
+    const A = D.algorithm;
+    const W = 900, H = 280, L = 48, R = 16, T = 20, B = 28;
+    const s = svg("timeline", W, H);
+    const years = A.map((d) => d.year);
+    const x = linear(years[0], years[years.length - 1] + 1, L, W - R);  // a year spans [year, year+1)
+    const max = niceMax(Math.max(...A.map((d) => d.growth)));
+    const y = linear(0, max, H - B, T);
+    yAxis(s, y, [0, max / 2, max], L, W - R, (t) => t + "×");
+    years.forEach((yr) => text(s, x(yr + 0.5), H - 8, String(yr), { "text-anchor": "middle" }));
+    const events = [
+      [2020 + 7 / 12, "Reels launch"],
+      [2022 + 6 / 12, "~15% of feed from AI; plan to double"],
+      [2023 + 3 / 12, "~40% of Instagram from AI"],
+    ];
+    events.forEach(([t, label], i) => {
+      el("line", { x1: x(t), x2: x(t), y1: T, y2: H - B, stroke: "var(--text-muted)", "stroke-dasharray": "4 4" }, s);
+      text(s, x(t) - 6, T + 14 + i * 18, label, { "text-anchor": "end", class: "lbl" });
+    });
+    el("path", { d: A.map((d, i) => `${i ? "L" : "M"}${x(d.year + 0.5)},${y(d.growth)}`).join(""), fill: "none", stroke: "var(--s1)", "stroke-width": 2.5 }, s);
+    A.forEach((d) => {
+      el("circle", { cx: x(d.year + 0.5), cy: y(d.growth), r: 5, fill: "var(--s1)", stroke: "var(--surface-1)", "stroke-width": 2 }, s);
+      const hit = el("rect", { x: x(d.year), y: T, width: x(d.year + 1) - x(d.year), height: H - T - B, fill: "transparent" }, s);
+      hover(hit, () => `<b>${d.year}</b><br>${d.growth.toFixed(1)}× my pre-Reels likes<br>${pct(d.reel_share)} Reels`);
+    });
+  })();
+
   // ---- 06 algorithm ------------------------------------------------------------------
   (function algorithm() {
     const A = D.algorithm;
@@ -289,6 +306,8 @@
       ["Likes per year, vs. before Reels (2019–21 = 1×)", "growth", (v) => v.toFixed(1) + "×", false],
       ["Share of likes on Reels", "reel_share", pct, true],
       ["Share of likes on accounts I follow", "followed_share", pct, true],
+      ["Likes on accounts I'd never liked before", "new_account_share", pct, true],
+      ["Liked posts that used hashtags", "hashtag_share", pct, true],
       ["Share of likes going to my top 10 accounts", "top10_share", pct, true],
     ];
     const wrap = $("algo");

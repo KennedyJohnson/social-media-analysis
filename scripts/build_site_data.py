@@ -73,6 +73,8 @@ def main():
     likes = likes.sort_values("ts").reset_index(drop=True)
     likes["year"] = likes.ts.dt.year
     likes["month"] = likes.ts.dt.to_period("M").astype(str)
+    likes["new_account"] = ~likes.owner.duplicated()  # first time I ever liked this account
+    likes["has_hashtag"] = likes.hashtags.map(len) > 0
     recent = likes[likes.year >= MIN_YEAR]
 
     # Sessions: consecutive likes less than SESSION_GAP apart.
@@ -114,6 +116,8 @@ def main():
         per_year.append({
             "year": int(y), "likes": int(len(g)), "reel_share": float((g.kind == "reel").mean()),
             "followed_share": float(g.owner.isin(following).mean()),
+            "new_account_share": float(g.new_account.mean()),
+            "hashtag_share": float(g.has_hashtag.mean()),
             "unique_accounts": int(owners.size),
             "top10_share": float(owners.head(10).sum() / len(g)),
             "one_off_share": float((owners == 1).sum() / len(g)),

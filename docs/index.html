@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -75,10 +75,18 @@ details td, details th { padding: 3px 10px 3px 0; text-align: right; } details t
 footer { margin-top: 80px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); padding-top: 20px; }
 footer a { color: var(--text-secondary); }
 .chip { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+table.map { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.map th, table.map td { text-align: left; vertical-align: top; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--grid); }
+table.map th { color: var(--text-muted); font-weight: 500; font-size: 12px; }
+table.map td:first-child { color: var(--text-primary); font-weight: 500; }
+table.map td { color: var(--text-secondary); }
+.tablewrap { overflow-x: auto; }
+svg .loop rect { fill: var(--surface-0); stroke: var(--border); }
+svg .loop path { fill: none; stroke: var(--s1); stroke-width: 2; }
+svg .arrowhead { fill: var(--s1); stroke: none; }
 </style>
 </head>
 <body>
-<button class="theme-btn" id="theme" type="button">Theme</button>
 <main>
   <header class="hero">
     <div class="eyebrow">A personal data story</div>
@@ -155,8 +163,83 @@ footer a { color: var(--text-secondary); }
     <div class="eyebrow">06 · The algorithm</div>
     <h2>Who chose what I saw?</h2>
     <p>If my likes went to accounts I follow, I was choosing. If they spread across thousands of strangers, the recommendation feed was. Each panel tracks one signal per year.</p>
+    <div class="card">
+      <h3>How the feed took over, and my likes with it</h3>
+      <p class="sub">My likes per year compared with before Reels (2019–21 = 1×), with the changes Instagram made along the way</p>
+      <div id="timeline"></div>
+      <ul class="list small">
+        <li><b>2016:</b> Instagram replaced its chronological feed with one ordered by what it predicts you'll care about (<a href="https://techcrunch.com/2016/06/03/instagrams-new-algorithm-that-puts-the-best-posts-first-goes-live-for-all/">TechCrunch</a>).</li>
+        <li><b>Aug 2020:</b> Reels launched in the U.S. (<a href="https://about.instagram.com/blog/announcements/introducing-instagram-reels-announcement">Instagram</a>).</li>
+        <li><b>Jul 2022:</b> Mark Zuckerberg: "about 15% of content in a person's Facebook feed and a little more than that of their Instagram feed is recommended by our AI… We expect these numbers to more than double by the end of next year" (<a href="https://s21.q4cdn.com/399680738/files/doc_financials/2022/q2/Meta-Q2-2022-Earnings-Call-Transcript.pdf">Q2 2022 earnings call</a>).</li>
+        <li><b>Apr 2023:</b> "Across all of Instagram, that's about 40% of the content that you see" (<a href="https://s21.q4cdn.com/399680738/files/doc_financials/2023/q1/META-Q1-2023-Earnings-Call-Transcript.pdf">Q1 2023 earnings call</a>).</li>
+      </ul>
+    </div>
     <div class="grid2" id="algo"></div>
-    <p class="finding" id="f-algo"><b>The algorithm took over.</b> Instagram launched Reels in the U.S. in <a href="https://about.instagram.com/blog/announcements/introducing-instagram-reels-announcement">August 2020</a>, its answer to TikTok. You can watch it take over my likes: 1% Reels in 2020, 8% in 2021, 54% in 2022 and 87% by 2023. In 2019, my top 10 accounts got half of my likes. In 2026, 94% are Reels and my top 10 get just 3%: my likes are spread across a huge number of accounts I don't know. Only about 3% of this year's likes went to accounts I follow. (Follow data only includes accounts I follow now, so earlier years are approximate.)</p>
+    <p class="finding" id="f-algo"><b>The algorithm took over.</b> Instagram launched Reels in the U.S. in <a href="https://about.instagram.com/blog/announcements/introducing-instagram-reels-announcement">August 2020</a>, its answer to TikTok. You can watch it take over my likes: 1% Reels in 2020, 8% in 2021, 54% in 2022 and 87% by 2023. In 2019, my top 10 accounts got half of my likes. In 2026, 94% are Reels and my top 10 get just 3%: my likes are spread across a huge number of accounts I don't know. Only about 3% of this year's likes went to accounts I follow. (Follow data only includes accounts I follow now, so earlier years are approximate.) Discovery tells the same story: in 2019 about 1 in 5 of my likes went to an account I'd never liked before; since 2022 it's been between half and two thirds. One surprise: I expected hashtags to fade as the algorithm took over, but the share of liked posts using them rose from 41% to 63%. Creators still tag heavily, even though ranking now leans on what the video contains and how people react to it.</p>
+  </section>
+
+  <section id="machine">
+    <div class="eyebrow">07 · How the machine sees me</div>
+    <h2>My likes are training data</h2>
+    <p>Every like on this page was also a signal to Instagram. The app doesn't have one "algorithm". It runs separate ranking systems for Feed, Stories, Explore and Reels, and each one predicts what I'll do next and orders content by those predictions. Here is how my own data lines up with what Instagram says those systems look at.</p>
+
+    <div class="card">
+      <h3>What I did, and how the ranking system uses it</h3>
+      <p class="sub">Left: patterns from this page. Middle: the signal Instagram documents. Right: what it predicts from it.</p>
+      <div class="tablewrap"><table class="map">
+        <tr><th>In my data</th><th>Documented signal</th><th>What it predicts</th></tr>
+        <tr><td>Pets &amp; Animals went from 2% of my likes to about 20%</td><td>"How well the reel matches content you tend to interact with"</td><td>That I'll like the next animal video, so it shows me more</td></tr>
+        <tr><td>94% of my likes are now Reels, up from 1% the year Reels launched</td><td>"Your activity": what you like, save and comment on, by format</td><td>That Reels hold my attention better than photos</td></tr>
+        <tr><td>Only about 3% of this year's likes went to accounts I follow</td><td>Reels and Explore: "the majority of what you see is from accounts you don't follow"</td><td>Which strangers' posts I'll engage with</td></tr>
+        <tr><td>My top 10 accounts went from half my likes to 3%</td><td>Candidate retrieval: the system gathers possible reels, then scores "about 100" and ranks them</td><td>A fresh pool of creators every session, not the same few accounts</td></tr>
+        <tr><td>60% of my likes come in sessions of 20+</td><td>"Whether or not you've been viewing reels for more than 15 seconds"</td><td>How likely I am to keep watching, or to leave within 3 seconds</td></tr>
+        <tr><td>I now like about one comment for every post I like</td><td>"Which media have you commented on in the past"; comments are part of "your activity"</td><td>How likely I am to comment, which pushes more of the posts that spark discussion</td></tr>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3>The feedback loop</h3>
+      <svg viewBox="0 0 900 150" role="img" aria-label="A loop: I like a post, the model updates its prediction, it shows more similar posts, I like more of them">
+        <g class="loop">
+          <rect x="10" y="45" width="190" height="60" rx="10"></rect><text x="105" y="80" text-anchor="middle" class="lbl">I like a pet video</text>
+          <rect x="240" y="45" width="190" height="60" rx="10"></rect><text x="335" y="72" text-anchor="middle" class="lbl">Model raises its guess</text><text x="335" y="90" text-anchor="middle" class="lbl">that I like pets</text>
+          <rect x="470" y="45" width="190" height="60" rx="10"></rect><text x="565" y="72" text-anchor="middle" class="lbl">More pet videos</text><text x="565" y="90" text-anchor="middle" class="lbl">rank near the top</text>
+          <rect x="700" y="45" width="190" height="60" rx="10"></rect><text x="795" y="72" text-anchor="middle" class="lbl">I see more of them,</text><text x="795" y="90" text-anchor="middle" class="lbl">so I like more of them</text>
+          <path d="M200 75 H236 M430 75 H466 M660 75 H696" marker-end="url(#arrow)"></path>
+          <path d="M795 105 V132 H105 V109" marker-end="url(#arrow)"></path>
+        </g>
+        <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"></path></marker></defs>
+      </svg>
+      <p class="small muted">My data fits this loop, but it can't prove it: I can't separate my taste changing from the app steering it. Both are probably true.</p>
+    </div>
+
+    <div class="card">
+      <h3>What does "pet video" actually mean to a machine?</h3>
+      <p>The categories on this page are mine. I named 20 topics, and a small language model decided which one each post's caption and hashtags sounded most like. Instagram mostly doesn't work from a list of named categories like that. It turns every post, and every person, into a long list of numbers (an <b>embedding</b>). Posts that people tend to engage with in the same way end up with similar numbers, close together.</p>
+      <div class="tablewrap"><table class="map">
+        <tr><th></th><th>This page</th><th>Instagram</th></tr>
+        <tr><td>What it looks at</td><td>Caption and hashtags only</td><td>The video's frames and sound, its text, and who engages with it. Meta's Reels models learn "the relationships between the sound and images in a video."</td></tr>
+        <tr><td>What a category is</td><td>One of 20 names I wrote, like "Pets &amp; Animals"</td><td>A neighborhood in embedding space, with no name needed</td></tr>
+        <tr><td>How specific it gets</td><td>"Pets &amp; Animals"</td><td>As fine as the data allows: roughly "orange cats knocking things off counters, set to this month's trending sound"</td></tr>
+        <tr><td>What it's for</td><td>Describing my history</td><td>Matching me to posts: a "two-tower" model builds one embedding for me and one for each post, and posts whose numbers sit close to mine are pulled in as candidates</td></tr>
+        <tr><td>Posts it can't read</td><td>About a third had too little text, so I marked them Unclear</td><td>None. A silent video with no caption still has pixels, sound and viewers</td></tr>
+      </table></div>
+      <p>So when Instagram "learns I like pet videos," there is usually no switch labelled <i>pets</i>. Its guess about me moves toward a region full of animal clips. Because sound is part of the embedding, a cat video with a trending song can sit nearer to other videos using that song than to a quiet cat photo. Named topics do exist where people need to see them: my download includes a list of ad topics I asked to see less of. The ranking itself runs on the numbers.</p>
+      <p class="small muted">Sources: Meta AI, <a href="https://ai.meta.com/blog/learning-from-videos-to-understand-the-world/">Learning from videos to understand the world</a> (March 2021, on Reels video embeddings); Engineering at Meta, <a href="https://engineering.fb.com/2023/08/09/ml-applications/scaling-instagram-explore-recommendations-system/">Scaling the Instagram Explore recommendations system</a> (August 2023, on two-tower retrieval).</p>
+    </div>
+
+    <div class="card">
+      <h3>Beyond likes: the other signals in my download</h3>
+      <p class="sub">Likes are only one input. The rest of the export fills in most of the picture, and shows where it stops.</p>
+      <ul class="list">
+        <li><b>Shares.</b> Instagram names resharing as one of its most important predictions. My DMs show I went from sending about 4 reels for every 100 I liked in 2022 to about 11 in 2025. Almost everything I shared (89%) I had also liked. But sharing isn't just liking more: friends' posts are about 8% of what I send but only 3% of what I like, and news is 4% versus 2%. Sharing is the more social signal.</li>
+        <li><b>Everything I scrolled past.</b> The download covers only two weeks of what I watched and viewed. Of the reels and posts it lists, I liked about 1 in 3, so the system learned from the other two thirds too.</li>
+        <li><b>Telling it "no".</b> I've tapped "Not interested" 407 times on Explore and Reels. The most common topic I rejected was fitness, which is also about 10% of what I like. That's the "pet video" point in practice: to the system, the fitness posts I like and the ones I reject sit in different neighborhoods, even though my categories lump them together.</li>
+        <li><b>Advertising.</b> The download lists <b>5,311 advertisers</b> that "uploaded an audience list containing entries that were matched to" my profile. These are typically customer lists (emails, phone numbers) that businesses upload and Meta matches to accounts. The ranking systems and the ad systems learn from the same behavior.</li>
+        <li><b>Still missing: watch time.</b> This is the signal Instagram weighs most for Reels. Its predictions are about whether I'll watch to the end, give up within 3 seconds, or watch longer than 95% of viewers. No file in the download records how long I watched anything.</li>
+      </ul>
+      <p class="small muted">Sources: Adam Mosseri, <a href="https://about.instagram.com/blog/announcements/instagram-ranking-explained">Instagram Ranking Explained</a> (Instagram, May 2023); Meta Transparency Center, <a href="https://transparency.meta.com/features/explaining-ranking/ig-reels-chaining/">Instagram Reels system card</a> and <a href="https://transparency.meta.com/features/explaining-ranking/">how Meta explains ranking</a>; Meta, <a href="https://about.fb.com/news/2023/06/how-ai-ranks-content-on-facebook-and-instagram/">How AI influences what you see on Facebook and Instagram</a> (June 2023).</p>
+    </div>
   </section>
 
   <footer>

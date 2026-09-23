@@ -19,6 +19,9 @@ python scripts/parse_export.py "path/to/instagram-export"
 # 2. Categorise each liked post and score caption sentiment (slow on CPU)
 python scripts/classify.py
 
+# 2b. Other ranking signals as aggregates: shares, viewing window, "not interested", advertiser count
+python scripts/signals.py "path/to/instagram-export"
+
 # 3. Aggregate into docs/data.js
 python scripts/build_site_data.py
 
