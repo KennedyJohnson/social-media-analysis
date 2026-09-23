@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What I Liked</title>
+<meta name="description" content="A data story built from eleven years of my Instagram likes: interests over time, when I scroll, sentiment and the algorithm.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --surface-0: #f6f5f2; --surface-1: #fcfcfb; --border: #e3e1dc; --grid: #ecebe7;
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7c7a75;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7; --s8: #e34948;
+  --other: #b9b7b0;
+  --seq-0: #f0efec; --seq-1: #cde2fb; --seq-2: #9ec5f4; --seq-3: #5598e7; --seq-4: #256abf; --seq-5: #104281;
+  --neg: #e34948; --pos: #2a78d6; --mid: #f0efec;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --surface-0: #121211; --surface-1: #1a1a19; --border: #2e2e2b; --grid: #262624;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+    --other: #55544f;
+    --seq-0: #262624; --seq-1: #104281; --seq-2: #1c5cab; --seq-3: #2a78d6; --seq-4: #5598e7; --seq-5: #9ec5f4;
+    --neg: #e66767; --pos: #3987e5; --mid: #383835;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-0: #121211; --surface-1: #1a1a19; --border: #2e2e2b; --grid: #262624;
+  --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+  --other: #55544f;
+  --seq-0: #262624; --seq-1: #104281; --seq-2: #1c5cab; --seq-3: #2a78d6; --seq-4: #5598e7; --seq-5: #9ec5f4;
+  --neg: #e66767; --pos: #3987e5; --mid: #383835;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--surface-0); color: var(--text-primary); font: 16px/1.6 Inter, system-ui, sans-serif; }
+main { max-width: 960px; margin: 0 auto; padding: 48px 16px 80px; }
+header.hero h1 { font: 600 clamp(36px, 7vw, 64px)/1.05 Fraunces, Georgia, serif; margin: 8px 0 16px; letter-spacing: -0.02em; }
+.eyebrow { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+.lede { color: var(--text-secondary); font-size: 19px; max-width: 640px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 32px 0 8px; }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.tile .v { font: 600 28px/1.1 Inter, sans-serif; font-variant-numeric: tabular-nums; }
+.tile .l { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
+section { margin-top: 72px; }
+section h2 { font: 600 30px/1.15 Fraunces, Georgia, serif; margin: 4px 0 8px; }
+section > p { color: var(--text-secondary); max-width: 680px; }
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-top: 20px; position: relative; }
+.card h3 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+.card .sub { color: var(--text-muted); font-size: 13px; margin: 0 0 12px; }
+.finding { border-left: 3px solid var(--s1); padding: 4px 0 4px 14px; margin: 20px 0 0; color: var(--text-primary); max-width: 680px; }
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+svg text { fill: var(--text-muted); font: 11px Inter, sans-serif; }
+svg .lbl { fill: var(--text-secondary); font-size: 12px; font-weight: 500; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.multiples { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px 20px; }
+.multiples .m h4 { margin: 0; font-size: 13px; font-weight: 600; }
+.multiples .m .d { font-size: 12px; color: var(--text-muted); }
+.tip { position: fixed; pointer-events: none; background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.45; color: var(--text-primary); box-shadow: 0 4px 16px rgba(0,0,0,.12); opacity: 0; transition: opacity .1s; z-index: 10; max-width: 240px; }
+.tip b { font-weight: 600; } .tip .m { color: var(--text-secondary); }
+select { font: inherit; font-size: 14px; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+.controls { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; font-size: 14px; color: var(--text-secondary); flex-wrap: wrap; }
+details { margin-top: 12px; font-size: 13px; color: var(--text-secondary); }
+details table { border-collapse: collapse; margin-top: 8px; font-variant-numeric: tabular-nums; }
+details td, details th { padding: 3px 10px 3px 0; text-align: right; } details td:first-child, details th:first-child { text-align: left; }
+.theme-btn { position: fixed; top: 12px; right: 12px; background: var(--surface-1); border: 1px solid var(--border); color: var(--text-secondary); border-radius: 20px; padding: 6px 12px; font: 13px Inter, sans-serif; cursor: pointer; }
+footer { margin-top: 80px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); padding-top: 20px; }
+footer a { color: var(--text-secondary); }
+.chip { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+</style>
+</head>
+<body>
+<button class="theme-btn" id="theme" type="button">Theme</button>
+<main>
+  <header class="hero">
+    <div class="eyebrow">A personal data story</div>
+    <h1>Eleven years of double-taps</h1>
+    <p class="lede">I downloaded my Instagram data and turned every post I've ever liked into data. No names, no captions, just broad patterns: what I'm into, when I scroll, and how much of it the algorithm chose for me.</p>
+    <div class="tiles" id="tiles"></div>
+  </header>
+
+  <section id="interests">
+    <div class="eyebrow">01 · Interests</div>
+    <h2>What I've been into</h2>
+    <p>Each liked post was assigned one broad category by comparing a sentence embedding of its caption and hashtags against short category descriptions. The chart shows each category's share of categorised likes per year since 2019.</p>
+    <div class="card">
+      <h3>Share of likes by category, per year</h3>
+      <p class="sub">The biggest categories (10% or more of likes in at least one year); everything else is folded into Other. Hover for detail.</p>
+      <div class="legend" id="stack-legend"></div>
+      <div id="stack"></div>
+    </div>
+    <div class="card">
+      <h3>The biggest shifts</h3>
+      <p class="sub">The categories that changed the most, share of likes per year since 2019. Each panel has its own scale.</p>
+      <div class="multiples" id="multiples"></div>
+    </div>
+    <p class="finding" id="f-interests"><b>My feed went from friends to animals.</b> In 2019, posts from friends and life updates were 17% of what I liked; since 2023 they're about 3%. Pets & Animals went the other way, from 2% in 2021 to roughly one in five likes today, the biggest category. Tech & AI is the quiet riser, tripling from 1.5% to over 4%. Sports had one big year: 12% of my likes in 2022, then back to about 3%.</p>
+  </section>
+
+  <section id="when">
+    <div class="eyebrow">02 · Rhythm</div>
+    <h2>When I scroll</h2>
+    <p>Share of my likes in each part of the day, since 2023 (US Central time).</p>
+    <div class="card">
+      <h3>When in the day I like posts</h3>
+      <p class="sub">Share of likes</p>
+      <div id="heat"></div>
+    </div>
+    <p class="finding" id="f-when"><b>I scroll all day, not just at night.</b> My likes split almost evenly between morning, afternoon and evening, about 30% each, and only about 1 in 7 comes late at night.</p>
+  </section>
+
+  <section id="sessions">
+    <div class="eyebrow">03 · Sessions</div>
+    <h2>Scrolling sessions</h2>
+    <p>A session is a run of likes with less than 10 minutes between them. It's a proxy, since scrolling without liking is invisible, but it shows the shape of my habit.</p>
+    <div class="tiles" id="sess-tiles"></div>
+    <div class="card"><h3>How long sessions run</h3><p class="sub">Number of sessions by likes per session, since 2023</p><div id="sess-hist"></div></div>
+    </div>
+    <p class="finding" id="f-sessions"><b>Most sessions are short, but most likes come from long ones.</b> A typical session is 4 likes over about 2 minutes, yet 60% of all my likes came in sessions of 20 or more. In 2026 the typical session doubled to 8 likes.</p>
+  </section>
+
+  <section id="comments">
+    <div class="eyebrow">04 · The comment section</div>
+    <h2>Reading the comments</h2>
+    <p>I've also liked tens of thousands of comments. The export doesn't include the comment text, only which post it was on and when, so these are matched back to the posts I liked to see where I go digging.</p>
+    <div class="tiles" id="com-tiles"></div>
+    <div class="card"><h3>Comment likes per post like</h3><p class="sub">By quarter, since 2022</p><div id="com-q"></div></div>
+    </div>
+    <p class="finding" id="f-comments"><b>I read the comments more than ever.</b> In early 2022 I liked about 1 comment for every 5 posts; by 2026 it's nearly 1 to 1. Four in five comment likes happen in the same minute I like the post, so it's part of one quick read rather than a later return.</p>
+  </section>
+
+  <section id="sentiment">
+    <div class="eyebrow">05 · Sentiment</div>
+    <h2>The mood of my feed</h2>
+    <p>Captions were scored with a RoBERTa model trained on tweets (<code>cardiffnlp/twitter-roberta-base-sentiment-latest</code>), which handles emoji and slang better than word-list methods. Score = P(positive) − P(negative), from −1 to +1.</p>
+    <div class="card">
+      <h3>Average caption sentiment by month</h3>
+      <p class="sub">Since 2022. Thin line: each month. Bold lines: yearly average. All values are positive (0 is neutral), so this is zoomed in to show the trend.</p>
+      <div id="sent-month"></div>
+    </div>
+    <div class="card"><h3>Most and least positive topics</h3><p class="sub">Average caption sentiment, the top three and bottom three categories</p><div id="sent-cat"></div></div>
+    </div>
+    <p class="finding" id="f-sentiment"><b>My feed is positive, but less than it used to be.</b> Average caption sentiment fell every year, from +0.38 in 2022 to +0.27 in 2026, and the share of negative captions rose from 8% to 13%. Friends' posts are the most positive category (+0.60); news and politics the least (+0.20).</p>
+  </section>
+
+  <section id="algorithm">
+    <div class="eyebrow">06 · The algorithm</div>
+    <h2>Who chose what I saw?</h2>
+    <p>If my likes went to accounts I follow, I was choosing. If they spread across thousands of strangers, the recommendation feed was. Each panel tracks one signal per year.</p>
+    <div class="grid2" id="algo"></div>
+    <p class="finding" id="f-algo"><b>The algorithm took over.</b> Instagram launched Reels in the U.S. in <a href="https://about.instagram.com/blog/announcements/introducing-instagram-reels-announcement">August 2020</a>, its answer to TikTok. You can watch it take over my likes: 1% Reels in 2020, 8% in 2021, 54% in 2022 and 87% by 2023. In 2019, my top 10 accounts got half of my likes. In 2026, 94% are Reels and my top 10 get just 3%: my likes are spread across a huge number of accounts I don't know. Only about 3% of this year's likes went to accounts I follow. (Follow data only includes accounts I follow now, so earlier years are approximate.)</p>
+  </section>
+
+  <footer>
+    <p><b>Method.</b> Parsed from Instagram's "Download your information" HTML export with Python. Categories come from <code>all-MiniLM-L6-v2</code> embeddings matched to hand-written category descriptions (posts with too little text are marked Unclear and left out of the shares). Sentiment is <code>twitter-roberta-base-sentiment-latest</code>. Instagram exports times at a fixed UTC−8 offset; they are converted to US Central time (with daylight saving).</p>
+    <p><b>Privacy.</b> Only aggregates are published. Raw data, captions and account names stay on my machine. Code: <a href="https://github.com/KennedyJohnson/instagram-likes-analysis">github.com/KennedyJohnson/instagram-likes-analysis</a> · <a href="https://kennedyjohnson.github.io/">kennedyjohnson.github.io</a></p>
+  </footer>
+</main>
+<div class="tip" id="tip"></div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
