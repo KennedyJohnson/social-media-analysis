@@ -200,8 +200,11 @@
   $("ig-binge").textContent = pct(IG.sessions.binge_share);
   const by = Y.filter((d) => d.year >= 2016);
   bars("binge", by.map((d) => String(d.year)), by.map((d) => d.binge_share), (v) => pct(v, 1) + " of likes in 20+ like sessions", COL.yt);
-  $("hours-sub").textContent = `Share of likes by hour, ${YT.hours_years}`;
-  bars("yt-hours", YT.hours.map((_, h) => hourLabel(h)), YT.hours, (v) => pct(v, 1) + " of likes", COL.yt, { labelEvery: 6, W: 440 });
+  $("hours-sub").textContent = `Share of likes, ${YT.hours_years.replace("-", "–")}`;
+  // Same four parts of the day as the Instagram chart.
+  const parts = [["Morning", 6, 12], ["Afternoon", 12, 17], ["Evening", 17, 22], ["Night", 22, 30]];
+  const ytParts = parts.map(([, a, b]) => { let s = 0; for (let h = a; h < b; h++) s += YT.hours[h % 24]; return s; });
+  bars("yt-hours", parts.map((p) => p[0]), ytParts, (v) => pct(v, 1) + " of likes", COL.yt, { W: 440 });
   bars("ig-heat", IG.time_of_day.map((d) => d.label), IG.time_of_day.map((d) => d.share), (v) => pct(v, 1) + " of likes", COL.ig, { W: 440 });
   const early = Y.filter((d) => d.year <= 2019), eBinge = early.reduce((t, d) => t + d.binge_share * d.likes, 0) / early.reduce((t, d) => t + d.likes, 0);
   $("f-doom").innerHTML = `<b>My scrolling went from checking in to sinking in.</b> Up to 2019, ${pct(eBinge, 1)} of my YouTube likes came in long runs of 20 or more; by 2025 it was ${pct(yt25.binge_share)}, the same year short video became a steady part of what I liked. On Instagram, ${pct(IG.sessions.binge_share)} of all my likes came in sessions like that. It isn't a late-night habit either: on both apps my activity is spread through the whole day.` +
