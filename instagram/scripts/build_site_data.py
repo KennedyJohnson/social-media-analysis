@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA, DOCS = ROOT / "data", ROOT / "docs"
+DATA, DOCS = ROOT / "data", ROOT.parent / "docs"
 SESSION_GAP = pd.Timedelta(minutes=10)
 MIN_YEAR = 2019
 PRIVATE_CATEGORIES = {"Relationships & Dating"}  # earlier years have too few likes to say anything
@@ -193,7 +193,7 @@ def main():
     out["time_of_day"] = [{"label": n, "hours": h, "share": round(float(recent_hours.isin(list(r)).mean()), 3)}
                           for n, h, r in buckets]
     DOCS.mkdir(exist_ok=True)
-    (DOCS / "data.js").write_text("window.DATA = " + json.dumps(out, separators=(",", ":")) + ";\n", encoding="utf-8")
+    (DOCS / "data_instagram.js").write_text("window.IG = " + json.dumps(out, separators=(",", ":")) + ";\n", encoding="utf-8")
     print(json.dumps({k: out[k] for k in ["totals", "time_of_day"]}, indent=1, default=str))
     print([(r["year"], r["growth"]) for r in out["algorithm"]])
 

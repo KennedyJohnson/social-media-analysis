@@ -3,252 +3,179 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>What I Liked</title>
-<meta name="description" content="A data story built from eleven years of my Instagram likes: interests over time, when I scroll, sentiment and the algorithm.">
+<title>Feed, Fed</title>
+<meta name="description" content="A data story built from fourteen years of my Instagram, Reddit and YouTube activity: how recommendation algorithms and AI reshaped the way I scroll, and why doomscrolling works for the companies.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
-<style>
-:root {
-  color-scheme: light;
-  --surface-0: #f6f5f2; --surface-1: #fcfcfb; --border: #e3e1dc; --grid: #ecebe7;
-  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7c7a75;
-  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7; --s8: #e34948;
-  --other: #b9b7b0;
-  --seq-0: #f0efec; --seq-1: #cde2fb; --seq-2: #9ec5f4; --seq-3: #5598e7; --seq-4: #256abf; --seq-5: #104281;
-  --neg: #e34948; --pos: #2a78d6; --mid: #f0efec;
-}
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme="light"])) {
-    color-scheme: dark;
-    --surface-0: #121211; --surface-1: #1a1a19; --border: #2e2e2b; --grid: #262624;
-    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
-    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
-    --other: #55544f;
-    --seq-0: #262624; --seq-1: #104281; --seq-2: #1c5cab; --seq-3: #2a78d6; --seq-4: #5598e7; --seq-5: #9ec5f4;
-    --neg: #e66767; --pos: #3987e5; --mid: #383835;
-  }
-}
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --surface-0: #121211; --surface-1: #1a1a19; --border: #2e2e2b; --grid: #262624;
-  --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e86;
-  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
-  --other: #55544f;
-  --seq-0: #262624; --seq-1: #104281; --seq-2: #1c5cab; --seq-3: #2a78d6; --seq-4: #5598e7; --seq-5: #9ec5f4;
-  --neg: #e66767; --pos: #3987e5; --mid: #383835;
-}
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--surface-0); color: var(--text-primary); font: 16px/1.6 Inter, system-ui, sans-serif; }
-main { max-width: 960px; margin: 0 auto; padding: 48px 16px 80px; }
-header.hero h1 { font: 600 clamp(36px, 7vw, 64px)/1.05 Fraunces, Georgia, serif; margin: 8px 0 16px; letter-spacing: -0.02em; }
-.eyebrow { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
-.lede { color: var(--text-secondary); font-size: 19px; max-width: 640px; }
-.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 32px 0 8px; }
-.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-.tile .v { font: 600 28px/1.1 Inter, sans-serif; font-variant-numeric: tabular-nums; }
-.tile .l { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
-section { margin-top: 72px; }
-section h2 { font: 600 30px/1.15 Fraunces, Georgia, serif; margin: 4px 0 8px; }
-section > p { color: var(--text-secondary); max-width: 680px; }
-.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-top: 20px; position: relative; }
-.card h3 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
-.card .sub { color: var(--text-muted); font-size: 13px; margin: 0 0 12px; }
-.finding { border-left: 3px solid var(--s1); padding: 4px 0 4px 14px; margin: 20px 0 0; color: var(--text-primary); max-width: 680px; }
-svg { display: block; width: 100%; height: auto; overflow: visible; }
-svg text { fill: var(--text-muted); font: 11px Inter, sans-serif; }
-svg .lbl { fill: var(--text-secondary); font-size: 12px; font-weight: 500; }
-.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
-.legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
-.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-.multiples { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px 20px; }
-.multiples .m h4 { margin: 0; font-size: 13px; font-weight: 600; }
-.multiples .m .d { font-size: 12px; color: var(--text-muted); }
-.tip { position: fixed; pointer-events: none; background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.45; color: var(--text-primary); box-shadow: 0 4px 16px rgba(0,0,0,.12); opacity: 0; transition: opacity .1s; z-index: 10; max-width: 240px; }
-.tip b { font-weight: 600; } .tip .m { color: var(--text-secondary); }
-select { font: inherit; font-size: 14px; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
-.controls { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; font-size: 14px; color: var(--text-secondary); flex-wrap: wrap; }
-details { margin-top: 12px; font-size: 13px; color: var(--text-secondary); }
-details table { border-collapse: collapse; margin-top: 8px; font-variant-numeric: tabular-nums; }
-details td, details th { padding: 3px 10px 3px 0; text-align: right; } details td:first-child, details th:first-child { text-align: left; }
-.theme-btn { position: fixed; top: 12px; right: 12px; background: var(--surface-1); border: 1px solid var(--border); color: var(--text-secondary); border-radius: 20px; padding: 6px 12px; font: 13px Inter, sans-serif; cursor: pointer; }
-footer { margin-top: 80px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); padding-top: 20px; }
-footer a { color: var(--text-secondary); }
-.chip { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
-table.map { width: 100%; border-collapse: collapse; font-size: 14px; }
-table.map th, table.map td { text-align: left; vertical-align: top; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--grid); }
-table.map th { color: var(--text-muted); font-weight: 500; font-size: 12px; }
-table.map td:first-child { color: var(--text-primary); font-weight: 500; }
-table.map td { color: var(--text-secondary); }
-.tablewrap { overflow-x: auto; }
-svg .loop rect { fill: var(--surface-0); stroke: var(--border); }
-svg .loop path { fill: none; stroke: var(--s1); stroke-width: 2; }
-svg .arrowhead { fill: var(--s1); stroke: none; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main>
   <header class="hero">
-    <div class="eyebrow">A personal data story</div>
-    <h1>Eleven years of double-taps</h1>
-    <p class="lede">I downloaded my Instagram data and turned every post I've ever liked into data. No names, no captions, just broad patterns: what I'm into, when I scroll, and how much of it the algorithm chose for me.</p>
+    <div class="eyebrow">A personal data story · Instagram · Reddit · YouTube</div>
+    <h1>Fourteen years of being fed</h1>
+    <p class="lede">I downloaded everything Instagram, Reddit and Google keep on me and turned it into data. No names, no captions, no channels or searches, just aggregate patterns: how my scrolling changed as recommendation algorithms took over, what AI has to do with it, and why "doomscrolling" is such a good business.</p>
     <div class="tiles" id="tiles"></div>
+    <nav class="toc">
+      <a href="#habit">01 · Three apps, one habit</a><a href="#algorithm">02 · Who chose what I saw</a><a href="#short">03 · Short video eats everything</a>
+      <a href="#doom">04 · Doomscrolling</a><a href="#feedback">05 · I stopped saying no</a><a href="#ai">06 · Where AI fits</a><a href="#platforms">07 · Platform by platform</a>
+    </nav>
   </header>
 
-  <section id="interests">
-    <div class="eyebrow">01 · Interests</div>
-    <h2>What I've been into</h2>
-    <p>Each liked post was assigned one broad category by comparing a sentence embedding of its caption and hashtags against short category descriptions. The chart shows each category's share of categorised likes per year since 2019.</p>
+  <section id="habit">
+    <div class="eyebrow">01 · Three apps, one habit</div>
+    <h2>My attention moved to whichever feed ranked hardest</h2>
+    <p>Each line is one platform's activity per year as a share of its own peak year: Reddit upvotes, YouTube likes, and Instagram likes. The absolute numbers aren't comparable (an upvote is cheaper than a like), but the timing is.</p>
     <div class="card">
-      <h3>Share of likes by category, per year</h3>
-      <p class="sub">The biggest categories (10% or more of likes in at least one year); everything else is folded into Other. Hover for detail.</p>
-      <div class="legend" id="stack-legend"></div>
-      <div id="stack"></div>
+      <h3>Activity per year, relative to each platform's peak</h3>
+      <p class="sub">Peak year = 100%. Instagram starts in 2019, when its likes are reliable in the export.</p>
+      <div class="legend" id="habit-legend"></div>
+      <div id="habit-chart"></div>
     </div>
-    <div class="card">
-      <h3>The biggest shifts</h3>
-      <p class="sub">The categories that changed the most, share of likes per year since 2019. Each panel has its own scale.</p>
-      <div class="multiples" id="multiples"></div>
-    </div>
-    <p class="finding" id="f-interests"><b>My feed went from friends to animals.</b> In 2019, posts from friends and life updates were 17% of what I liked; since 2023 they're about 3%. Pets & Animals went the other way, from 2% in 2021 to roughly one in five likes today, the biggest category. Tech & AI is the quiet riser, tripling from 1.5% to over 4%. Sports had one big year: 12% of my likes in 2022, then back to about 3%.</p>
-  </section>
-
-  <section id="when">
-    <div class="eyebrow">02 · Rhythm</div>
-    <h2>When I scroll</h2>
-    <p>Share of my likes in each part of the day, since 2023 (US Central time).</p>
-    <div class="card">
-      <h3>When in the day I like posts</h3>
-      <p class="sub">Share of likes</p>
-      <div id="heat"></div>
-    </div>
-    <p class="finding" id="f-when"><b>I scroll all day, not just at night.</b> My likes split almost evenly between morning, afternoon and evening, about 30% each, and only about 1 in 7 comes late at night.</p>
-  </section>
-
-  <section id="sessions">
-    <div class="eyebrow">03 · Sessions</div>
-    <h2>Scrolling sessions</h2>
-    <p>A session is a run of likes with less than 10 minutes between them. It's a proxy, since scrolling without liking is invisible, but it shows the shape of my habit.</p>
-    <div class="tiles" id="sess-tiles"></div>
-    <div class="card"><h3>How long sessions run</h3><p class="sub">Number of sessions by likes per session, since 2023</p><div id="sess-hist"></div></div>
-    </div>
-    <p class="finding" id="f-sessions"><b>Most sessions are short, but most likes come from long ones.</b> A typical session is 4 likes over about 2 minutes, yet 60% of all my likes came in sessions of 20 or more. In 2026 the typical session doubled to 8 likes.</p>
-  </section>
-
-  <section id="comments">
-    <div class="eyebrow">04 · The comment section</div>
-    <h2>Reading the comments</h2>
-    <p>I've also liked tens of thousands of comments. The export doesn't include the comment text, only which post it was on and when, so these are matched back to the posts I liked to see where I go digging.</p>
-    <div class="tiles" id="com-tiles"></div>
-    <div class="card"><h3>Comment likes per post like</h3><p class="sub">By quarter, since 2022</p><div id="com-q"></div></div>
-    </div>
-    <p class="finding" id="f-comments"><b>I read the comments more than ever.</b> In early 2022 I liked about 1 comment for every 5 posts; by 2026 it's nearly 1 to 1. Four in five comment likes happen in the same minute I like the post, so it's part of one quick read rather than a later return.</p>
-  </section>
-
-  <section id="sentiment">
-    <div class="eyebrow">05 · Sentiment</div>
-    <h2>The mood of my feed</h2>
-    <p>Captions were scored with a RoBERTa model trained on tweets (<code>cardiffnlp/twitter-roberta-base-sentiment-latest</code>), which handles emoji and slang better than word-list methods. Score = P(positive) − P(negative), from −1 to +1.</p>
-    <div class="card">
-      <h3>Average caption sentiment by month</h3>
-      <p class="sub">Since 2022. Thin line: each month. Bold lines: yearly average. All values are positive (0 is neutral), so this is zoomed in to show the trend.</p>
-      <div id="sent-month"></div>
-    </div>
-    <div class="card"><h3>Most and least positive topics</h3><p class="sub">Average caption sentiment, the top three and bottom three categories</p><div id="sent-cat"></div></div>
-    </div>
-    <p class="finding" id="f-sentiment"><b>My feed is positive, but less than it used to be.</b> Average caption sentiment fell every year, from +0.38 in 2022 to +0.27 in 2026, and the share of negative captions rose from 8% to 13%. Friends' posts are the most positive category (+0.60); news and politics the least (+0.20).</p>
+    <p class="finding" id="f-habit"></p>
   </section>
 
   <section id="algorithm">
-    <div class="eyebrow">06 · The algorithm</div>
+    <div class="eyebrow">02 · The algorithm</div>
     <h2>Who chose what I saw?</h2>
-    <p>If my likes went to accounts I follow, I was choosing. If they spread across thousands of strangers, the recommendation feed was. Each panel tracks one signal per year.</p>
+    <p>If my likes went to a handful of accounts, or to accounts and communities I'd chosen to follow, I was steering. If they spread across thousands of strangers, the recommendation system was. The same measure exists on all three platforms.</p>
     <div class="card">
-      <h3>How the feed took over, and my likes with it</h3>
-      <p class="sub">My likes per year compared with before Reels (2019–21 = 1×), with the changes Instagram made along the way</p>
-      <div id="timeline"></div>
+      <h3>Share of my likes going to my 10 most-liked accounts or channels</h3>
+      <p class="sub">Per year. The fewer favorites, the more the feed is doing the picking.</p>
+      <div class="legend" id="top10-legend"></div>
+      <div id="top10"></div>
+    </div>
+    <div class="card">
+      <h3>Share of activity on things I'd subscribed to or followed</h3>
+      <p class="sub">Reddit: upvotes in subscribed subreddits. YouTube: likes on channels I was subscribed to at the time. Instagram: likes on accounts I follow now.</p>
+      <div class="legend" id="subs-legend"></div>
+      <div id="subs"></div>
+    </div>
+    <p class="finding" id="f-algo"></p>
+    <div class="card">
+      <h3>What each company changed along the way</h3>
       <ul class="list small">
-        <li><b>2016:</b> Instagram replaced its chronological feed with one ordered by what it predicts you'll care about (<a href="https://techcrunch.com/2016/06/03/instagrams-new-algorithm-that-puts-the-best-posts-first-goes-live-for-all/">TechCrunch</a>).</li>
-        <li><b>Aug 2020:</b> Reels launched in the U.S. (<a href="https://about.instagram.com/blog/announcements/introducing-instagram-reels-announcement">Instagram</a>).</li>
-        <li><b>Jul 2022:</b> Mark Zuckerberg: "about 15% of content in a person's Facebook feed and a little more than that of their Instagram feed is recommended by our AI… We expect these numbers to more than double by the end of next year" (<a href="https://s21.q4cdn.com/399680738/files/doc_financials/2022/q2/Meta-Q2-2022-Earnings-Call-Transcript.pdf">Q2 2022 earnings call</a>).</li>
-        <li><b>Apr 2023:</b> "Across all of Instagram, that's about 40% of the content that you see" (<a href="https://s21.q4cdn.com/399680738/files/doc_financials/2023/q1/META-Q1-2023-Earnings-Call-Transcript.pdf">Q1 2023 earnings call</a>).</li>
+        <li><b>2016:</b> Instagram replaced its chronological feed with one ranked by predicted interest (<a href="https://techcrunch.com/2016/06/03/instagrams-new-algorithm-that-puts-the-best-posts-first-goes-live-for-all/">TechCrunch</a>). YouTube publishes its <a href="https://research.google/pubs/deep-neural-networks-for-youtube-recommendations/">deep-learning recommender paper</a>.</li>
+        <li><b>2017:</b> Reddit launches r/popular, a feed of posts from communities you don't follow (<a href="https://techcrunch.com/2017/02/15/reddit-tweaks-and-renames-public-front-page/amp/">TechCrunch</a>).</li>
+        <li><b>Jan 2018:</b> YouTube: more than 70% of watch time comes from its recommendations (<a href="https://www.cnet.com/tech/services-and-software/youtube-ces-2018-neal-mohan/">CNET</a>).</li>
+        <li><b>Aug 2020 / Mar 2021:</b> Instagram Reels and YouTube Shorts launch in the U.S., both answers to TikTok.</li>
+        <li><b>2022–23:</b> Meta says AI-recommended content is about 40% of what people see on Instagram (<a href="https://s21.q4cdn.com/399680738/files/doc_financials/2023/q1/META-Q1-2023-Earnings-Call-Transcript.pdf">Q1 2023 earnings call</a>). Reddit's home feed becomes <a href="https://support.reddithelp.com/hc/en-us/articles/4402284777364-What-are-home-feed-recommendations">machine-learned</a> and mixes in communities you don't follow.</li>
       </ul>
     </div>
-    <div class="grid2" id="algo"></div>
-    <p class="finding" id="f-algo"><b>The algorithm took over.</b> Instagram launched Reels in the U.S. in <a href="https://about.instagram.com/blog/announcements/introducing-instagram-reels-announcement">August 2020</a>, its answer to TikTok. You can watch it take over my likes: 1% Reels in 2020, 8% in 2021, 54% in 2022 and 87% by 2023. In 2019, my top 10 accounts got half of my likes. In 2026, 94% are Reels and my top 10 get just 3%: my likes are spread across a huge number of accounts I don't know. Only about 3% of this year's likes went to accounts I follow. (Follow data only includes accounts I follow now, so earlier years are approximate.) Discovery tells the same story: in 2019 about 1 in 5 of my likes went to an account I'd never liked before; since 2022 it's been between half and two thirds. One surprise: I expected hashtags to fade as the algorithm took over, but the share of liked posts using them rose from 41% to 63%. Creators still tag heavily, even though ranking now leans on what the video contains and how people react to it.</p>
   </section>
 
-  <section id="machine">
-    <div class="eyebrow">07 · How the machine sees me</div>
-    <h2>My likes are training data</h2>
-    <p>Every like on this page was also a signal to Instagram. The app doesn't have one "algorithm". It runs separate ranking systems for Feed, Stories, Explore and Reels, and each one predicts what I'll do next and orders content by those predictions. Here is how my own data lines up with what Instagram says those systems look at.</p>
-
+  <section id="short">
+    <div class="eyebrow">03 · Short-form video</div>
+    <h2>Short video eats everything</h2>
+    <p>Instagram tells me which likes were Reels. YouTube doesn't mark Shorts in the export, so I count liked videos tagged <code>#shorts</code>, a lower bound, since many Shorts aren't tagged.</p>
     <div class="card">
-      <h3>What I did, and how the ranking system uses it</h3>
-      <p class="sub">Left: patterns from this page. Middle: the signal Instagram documents. Right: what it predicts from it.</p>
-      <div class="tablewrap"><table class="map">
-        <tr><th>In my data</th><th>Documented signal</th><th>What it predicts</th></tr>
-        <tr><td>Pets &amp; Animals went from 2% of my likes to about 20%</td><td>"How well the reel matches content you tend to interact with"</td><td>That I'll like the next animal video, so it shows me more</td></tr>
-        <tr><td>94% of my likes are now Reels, up from 1% the year Reels launched</td><td>"Your activity": what you like, save and comment on, by format</td><td>That Reels hold my attention better than photos</td></tr>
-        <tr><td>Only about 3% of this year's likes went to accounts I follow</td><td>Reels and Explore: "the majority of what you see is from accounts you don't follow"</td><td>Which strangers' posts I'll engage with</td></tr>
-        <tr><td>My top 10 accounts went from half my likes to 3%</td><td>Candidate retrieval: the system gathers possible reels, then scores "about 100" and ranks them</td><td>A fresh pool of creators every session, not the same few accounts</td></tr>
-        <tr><td>60% of my likes come in sessions of 20+</td><td>"Whether or not you've been viewing reels for more than 15 seconds"</td><td>How likely I am to keep watching, or to leave within 3 seconds</td></tr>
-        <tr><td>I now like about one comment for every post I like</td><td>"Which media have you commented on in the past"; comments are part of "your activity"</td><td>How likely I am to comment, which pushes more of the posts that spark discussion</td></tr>
-      </table></div>
+      <h3>Share of likes on short-form video</h3>
+      <p class="sub">Dashed lines: Reels (Aug 2020) and Shorts (Mar 2021) launch in the U.S.</p>
+      <div class="legend" id="short-legend"></div>
+      <div id="short-chart"></div>
     </div>
+    <p class="finding" id="f-short"></p>
+  </section>
 
+  <section id="doom">
+    <div class="eyebrow">04 · Doomscrolling</div>
+    <h2>Why the endless feed works, for them</h2>
+    <p>A session is a run of likes less than 10 minutes apart. It undercounts, because scrolling without liking is invisible, but it shows how my habit changed shape: from checking in to sinking in.</p>
+    <div class="tiles" id="doom-tiles"></div>
     <div class="card">
-      <h3>The feedback loop</h3>
-      <svg viewBox="0 0 900 150" role="img" aria-label="A loop: I like a post, the model updates its prediction, it shows more similar posts, I like more of them">
-        <g class="loop">
-          <rect x="10" y="45" width="190" height="60" rx="10"></rect><text x="105" y="80" text-anchor="middle" class="lbl">I like a pet video</text>
-          <rect x="240" y="45" width="190" height="60" rx="10"></rect><text x="335" y="72" text-anchor="middle" class="lbl">Model raises its guess</text><text x="335" y="90" text-anchor="middle" class="lbl">that I like pets</text>
-          <rect x="470" y="45" width="190" height="60" rx="10"></rect><text x="565" y="72" text-anchor="middle" class="lbl">More pet videos</text><text x="565" y="90" text-anchor="middle" class="lbl">rank near the top</text>
-          <rect x="700" y="45" width="190" height="60" rx="10"></rect><text x="795" y="72" text-anchor="middle" class="lbl">I see more of them,</text><text x="795" y="90" text-anchor="middle" class="lbl">so I like more of them</text>
-          <path d="M200 75 H236 M430 75 H466 M660 75 H696" marker-end="url(#arrow)"></path>
-          <path d="M795 105 V132 H105 V109" marker-end="url(#arrow)"></path>
-        </g>
-        <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"></path></marker></defs>
-      </svg>
-      <p class="small muted">My data fits this loop, but it can't prove it: I can't separate my taste changing from the app steering it. Both are probably true.</p>
+      <h3>Share of YouTube likes that came in a 20+ like session</h3>
+      <p class="sub">Per year. On Instagram the same share is <span id="ig-binge"></span> across all years.</p>
+      <div id="binge"></div>
     </div>
-
-    <div class="card">
-      <h3>What does "pet video" actually mean to a machine?</h3>
-      <p>The categories on this page are mine. I named 20 topics, and a small language model decided which one each post's caption and hashtags sounded most like. Instagram mostly doesn't work from a list of named categories like that. It turns every post, and every person, into a long list of numbers (an <b>embedding</b>). Posts that people tend to engage with in the same way end up with similar numbers, close together.</p>
-      <div class="tablewrap"><table class="map">
-        <tr><th></th><th>This page</th><th>Instagram</th></tr>
-        <tr><td>What it looks at</td><td>Caption and hashtags only</td><td>The video's frames and sound, its text, and who engages with it. Meta's Reels models learn "the relationships between the sound and images in a video."</td></tr>
-        <tr><td>What a category is</td><td>One of 20 names I wrote, like "Pets &amp; Animals"</td><td>A neighborhood in embedding space, with no name needed</td></tr>
-        <tr><td>How specific it gets</td><td>"Pets &amp; Animals"</td><td>As fine as the data allows: roughly "orange cats knocking things off counters, set to this month's trending sound"</td></tr>
-        <tr><td>What it's for</td><td>Describing my history</td><td>Matching me to posts: a "two-tower" model builds one embedding for me and one for each post, and posts whose numbers sit close to mine are pulled in as candidates</td></tr>
-        <tr><td>Posts it can't read</td><td>About a third had too little text, so I marked them Unclear</td><td>None. A silent video with no caption still has pixels, sound and viewers</td></tr>
-      </table></div>
-      <p>So when Instagram "learns I like pet videos," there is usually no switch labelled <i>pets</i>. Its guess about me moves toward a region full of animal clips. Because sound is part of the embedding, a cat video with a trending song can sit nearer to other videos using that song than to a quiet cat photo. Named topics do exist where people need to see them: my download includes a list of ad topics I asked to see less of. The ranking itself runs on the numbers.</p>
-      <p class="small muted">Sources: Meta AI, <a href="https://ai.meta.com/blog/learning-from-videos-to-understand-the-world/">Learning from videos to understand the world</a> (March 2021, on Reels video embeddings); Engineering at Meta, <a href="https://engineering.fb.com/2023/08/09/ml-applications/scaling-instagram-explore-recommendations-system/">Scaling the Instagram Explore recommendations system</a> (August 2023, on two-tower retrieval).</p>
+    <div class="grid2">
+      <div class="card"><h3>When I like YouTube videos</h3><p class="sub" id="hours-sub">Share of likes by hour</p><div id="yt-hours"></div></div>
+      <div class="card"><h3>When I like Instagram posts</h3><p class="sub">Share of likes, since 2023</p><div id="ig-heat"></div></div>
     </div>
-
+    <p class="finding" id="f-doom"></p>
     <div class="card">
-      <h3>Beyond likes: the other signals in my download</h3>
-      <p class="sub">Likes are only one input. The rest of the export fills in most of the picture, and shows where it stops.</p>
+      <h3>Why this is good business</h3>
       <ul class="list">
-        <li><b>Shares.</b> Instagram names resharing as one of its most important predictions. My DMs show I went from sending about 4 reels for every 100 I liked in 2022 to about 11 in 2025. Almost everything I shared (89%) I had also liked. But sharing isn't just liking more: friends' posts are about 8% of what I send but only 3% of what I like, and news is 4% versus 2%. Sharing is the more social signal.</li>
-        <li><b>Everything I scrolled past.</b> The download covers only two weeks of what I watched and viewed. Of the reels and posts it lists, I liked about 1 in 3, so the system learned from the other two thirds too.</li>
-        <li><b>Telling it "no".</b> I've tapped "Not interested" 407 times on Explore and Reels. The most common topic I rejected was fitness, which is also about 10% of what I like. That's the "pet video" point in practice: to the system, the fitness posts I like and the ones I reject sit in different neighborhoods, even though my categories lump them together.</li>
-        <li><b>Advertising.</b> The download lists <b>5,311 advertisers</b> that "uploaded an audience list containing entries that were matched to" my profile. These are typically customer lists (emails, phone numbers) that businesses upload and Meta matches to accounts. The ranking systems and the ad systems learn from the same behavior.</li>
-        <li><b>Still missing: watch time.</b> This is the signal Instagram weighs most for Reels. Its predictions are about whether I'll watch to the end, give up within 3 seconds, or watch longer than 95% of viewers. No file in the download records how long I watched anything.</li>
+        <li><b>Time is inventory.</b> These apps make money from ads, and every extra minute is more ad slots. Ranking systems are trained to predict what keeps you watching, liking and sharing, because that's what fills those slots.</li>
+        <li><b>There's no bottom.</b> The engineer who designed infinite scroll has said he regrets it, comparing endless feeds to "behavioural cocaine" (<a href="https://www.bbc.com/news/technology-44640959">BBC, 2018</a>). With no natural stopping point, the session ends when you decide, not when the content does.</li>
+        <li><b>Unpredictable rewards.</b> Most videos are fine; every so often one is great. That variable payoff keeps you swiping for the next good one, the same pattern slot machines rely on.</li>
+        <li><b>Short clips mean more guesses.</b> A 20-second video gives the model a fresh prediction to make (and a fresh signal to learn from) every few seconds, so it learns what hooks me far faster than an hour-long video ever could.</li>
+        <li><b>Strangers are an endless supply.</b> A feed limited to people I follow runs out. A feed of recommended strangers never does, which is exactly the shift in section 02.</li>
       </ul>
-      <p class="small muted">Sources: Adam Mosseri, <a href="https://about.instagram.com/blog/announcements/instagram-ranking-explained">Instagram Ranking Explained</a> (Instagram, May 2023); Meta Transparency Center, <a href="https://transparency.meta.com/features/explaining-ranking/ig-reels-chaining/">Instagram Reels system card</a> and <a href="https://transparency.meta.com/features/explaining-ranking/">how Meta explains ranking</a>; Meta, <a href="https://about.fb.com/news/2023/06/how-ai-ranks-content-on-facebook-and-instagram/">How AI influences what you see on Facebook and Instagram</a> (June 2023).</p>
+    </div>
+  </section>
+
+  <section id="feedback">
+    <div class="eyebrow">05 · Feedback</div>
+    <h2>I stopped telling the machine "no"</h2>
+    <p>Dislikes and "Not interested" taps are the only direct negative signals I can send. On YouTube they're dated in my activity log.</p>
+    <div class="card">
+      <h3>YouTube dislikes and "Not interested" per year</h3>
+      <p class="sub">Dashed line: YouTube hides public dislike counts (Nov 2021)</p>
+      <div class="legend" id="neg-legend"></div>
+      <div id="neg"></div>
+    </div>
+    <p class="finding" id="f-feedback"></p>
+  </section>
+
+  <section id="ai">
+    <div class="eyebrow">06 · AI</div>
+    <h2>Where AI fits</h2>
+    <p>AI shows up in this story twice. First as the ranking system itself: every feed above is ordered by machine-learned models trained on behavior like mine. Second as a topic: more of what I like is <i>about</i> AI and tech.</p>
+    <div class="card">
+      <h3>AI and tech as a share of what I engage with</h3>
+      <p class="sub">Instagram: Tech &amp; AI category. Reddit: Science, Tech &amp; Data category. YouTube: liked videos with AI terms in the title (AI, ChatGPT, OpenAI, Gemini, Claude, LLM…)</p>
+      <div class="legend" id="ai-legend"></div>
+      <div id="ai-chart"></div>
+    </div>
+    <p class="finding" id="f-ai"></p>
+    <div class="card">
+      <h3>How the machine sees me</h3>
+      <div class="tablewrap"><table class="map">
+        <tr><th>In my data</th><th>What the ranking system learns</th></tr>
+        <tr><td>Likes spread across thousands of strangers</td><td>An embedding of "me" that sits near content, not people; candidates come from anywhere on the platform</td></tr>
+        <tr><td>Short video took over my likes on two apps</td><td>Short clips hold my attention; show more of them</td></tr>
+        <tr><td>Long sessions, all day</td><td>How likely I am to keep watching, which is the main thing Reels and Shorts rankers predict</td></tr>
+        <tr><td>Almost no dislikes or "Not interested" taps any more</td><td>Mostly positive signal; my silence reads as approval</td></tr>
+        <tr><td>More AI and tech content</td><td>Also my taste changing. The data can't separate taste from steering; both are probably true</td></tr>
+      </table></div>
+      <p class="small muted">Sources: Meta, <a href="https://about.fb.com/news/2023/06/how-ai-ranks-content-on-facebook-and-instagram/">How AI influences what you see on Facebook and Instagram</a> (2023); Covington, Adams &amp; Sargin, <a href="https://research.google/pubs/deep-neural-networks-for-youtube-recommendations/">Deep Neural Networks for YouTube Recommendations</a> (RecSys 2016); Engineering at Meta, <a href="https://engineering.fb.com/2023/08/09/ml-applications/scaling-instagram-explore-recommendations-system/">Scaling the Instagram Explore recommendations system</a> (2023).</p>
+    </div>
+  </section>
+
+  <section id="platforms">
+    <div class="eyebrow">07 · Platform by platform</div>
+    <h2>What I've been into</h2>
+    <p>Each platform's interests, as shares of categorized activity per year. Instagram posts were categorized with sentence embeddings of their captions; Reddit subreddits were hand-labelled.</p>
+    <div class="card">
+      <h3><span class="plat" style="color:var(--ig)">Instagram</span>Share of likes by category</h3>
+      <p class="sub">Categories that reached 10% of likes in at least one year; the rest are Other</p>
+      <div class="legend" id="ig-legend"></div><div id="ig-stack"></div>
+      <p class="finding"><b>From friends to animals.</b> Friends' posts went from 17% of my likes in 2019 to about 3% since 2023, while Pets &amp; Animals became the biggest category at about one in five.</p>
+    </div>
+    <div class="card">
+      <h3><span class="plat" style="color:var(--rd)">Reddit</span>Share of upvotes by category</h3>
+      <p class="sub">Categories that reached 10% of upvotes in at least one year; the rest are Other</p>
+      <div class="legend" id="rd-legend"></div><div id="rd-stack"></div>
+      <p class="finding"><b>From memes to "interesting".</b> Memes were 40% of my upvotes in 2017 and 6–9% by 2025; viral and interesting posts took their place.</p>
+    </div>
+    <div class="card">
+      <h3><span class="plat" style="color:var(--ig)">Instagram</span>The mood of my feed</h3>
+      <p class="sub">Average caption sentiment per year (RoBERTa, −1 to +1)</p>
+      <div id="sent"></div>
+      <p class="finding"><b>Positive, but less so every year</b>, and the share of negative captions rose from 8% to 13%.</p>
     </div>
   </section>
 
   <footer>
-    <p><b>Method.</b> Parsed from Instagram's "Download your information" HTML export with Python. Categories come from <code>all-MiniLM-L6-v2</code> embeddings matched to hand-written category descriptions (posts with too little text are marked Unclear and left out of the shares). Sentiment is <code>twitter-roberta-base-sentiment-latest</code>. Instagram exports times at a fixed UTC−8 offset; they are converted to US Central time (with daylight saving).</p>
-    <p><b>Privacy.</b> Only aggregates are published. Raw data, captions and account names stay on my machine. Code: <a href="https://github.com/KennedyJohnson/instagram-likes-analysis">github.com/KennedyJohnson/instagram-likes-analysis</a> · <a href="https://kennedyjohnson.github.io/">kennedyjohnson.github.io</a></p>
+    <p><b>Data.</b> Instagram "Download your information" (HTML), Reddit data request (CSV) and Google Takeout (YouTube activity). YouTube's export keeps likes, dislikes, subscriptions and "Not interested" taps back to 2012 but only the last few months of watch history. Times are US Central.</p>
+    <p><b>Method.</b> Reddit votes aren't dated, so each is dated by interpolating Reddit's sequential IDs between my own dated posts. Instagram categories come from <code>all-MiniLM-L6-v2</code> embeddings, sentiment from <code>twitter-roberta-base-sentiment-latest</code>. Sessions are runs of likes under 10 minutes apart.</p>
+    <p><b>Privacy.</b> Only aggregates are published: counts and shares by year, hour and category. No account, channel or subreddit names, captions, titles, searches, messages or individual timestamps. Raw exports stay on my machine, and each build fails if unexpected text reaches the page data. Code: <a href="https://github.com/KennedyJohnson/social-media-analysis">github.com/KennedyJohnson/social-media-analysis</a> · <a href="https://kennedyjohnson.github.io/">kennedyjohnson.github.io</a></p>
   </footer>
 </main>
 <div class="tip" id="tip"></div>
-<script src="data.js"></script>
+<script src="data_instagram.js"></script>
+<script src="data_reddit.js"></script>
+<script src="data_youtube.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
