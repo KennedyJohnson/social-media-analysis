@@ -225,7 +225,9 @@
   const igT = catShare(IG, "Tech & AI"), rdT = catShare(RD, "Science, Tech & Data");
   $("f-ai").innerHTML = `<b>More of my feed is about tech and AI.</b> Tech &amp; AI rose from ${pct(igT[2019], 1)} of my Instagram likes in 2019 to ${pct(igT[2026], 1)} in 2026. On Reddit, science and tech went from ${pct(rdT[2017], 1)} of upvotes in 2017 to ${pct(rdT[2026], 1)} in 2026. YouTube videos with AI in the title are still rare, but ${lastYT.year} is the high point so far at ${pct(lastYT.ai_share, 1)}. None of this means the apps pushed AI content on me. Part of it is my own interests (I study data science). What it does show is that the systems ranking my feed and the topic I'm reading about have become the same thing.`;
 
-  // ---- 07 platforms ------------------------------------------------------------------
+  $("yt-ni").textContent = fmt.format(YT.totals.not_interested);
+
+  // ---- 08 platforms ------------------------------------------------------------------
   stack("ig-stack", IG, "likes");
   stack("rd-stack", RD, "upvotes");
   (function sentiment() {

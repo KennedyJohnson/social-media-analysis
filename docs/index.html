@@ -18,7 +18,7 @@
     <div class="tiles" id="tiles"></div>
     <nav class="toc">
       <a href="#habit">01 · Three apps, one habit</a><a href="#algorithm">02 · Who chose what I saw</a><a href="#short">03 · Short video eats everything</a>
-      <a href="#doom">04 · Doomscrolling</a><a href="#feedback">05 · I stopped saying no</a><a href="#ai">06 · Where AI fits</a><a href="#platforms">07 · Platform by platform</a>
+      <a href="#doom">04 · Doomscrolling</a><a href="#feedback">05 · I stopped saying no</a><a href="#ai">06 · Where AI fits</a><a href="#machine">07 · How the machine sees me</a><a href="#platforms">08 · Platform by platform</a>
     </nav>
   </header>
 
@@ -128,22 +128,88 @@
       <div id="ai-chart"></div>
     </div>
     <p class="finding" id="f-ai"></p>
+  </section>
+
+  <section id="machine">
+    <div class="eyebrow">07 · How the machine sees me</div>
+    <h2>My likes are training data</h2>
+    <p>Every like, upvote and skip on this page was also a signal. None of these apps has one "algorithm". Each runs separate ranking systems for its feeds (Instagram's Feed, Stories, Explore and Reels; YouTube's Home, Up Next and Shorts; Reddit's Home and Popular). They work the same basic way: gather a few thousand possible posts, predict what I'll do with each one, and put the best predictions at the top.</p>
+
     <div class="card">
-      <h3>How the machine sees me</h3>
+      <h3>How a recommendation gets made</h3>
+      <p class="sub">The two-stage design described in YouTube's and Meta's own engineering papers</p>
+      <svg viewBox="0 0 900 150" role="img" aria-label="Billions of posts are narrowed to hundreds of candidates by retrieval, then a ranking model scores each and the top ones fill the feed">
+        <g class="loop">
+          <rect x="10" y="45" width="190" height="60" rx="10"></rect><text x="105" y="72" text-anchor="middle" class="lbl">Every post on</text><text x="105" y="90" text-anchor="middle" class="lbl">the platform</text>
+          <rect x="240" y="45" width="190" height="60" rx="10"></rect><text x="335" y="72" text-anchor="middle" class="lbl">Retrieval: a few hundred</text><text x="335" y="90" text-anchor="middle" class="lbl">that sit near "me"</text>
+          <rect x="470" y="45" width="190" height="60" rx="10"></rect><text x="565" y="72" text-anchor="middle" class="lbl">Ranking: predict watch,</text><text x="565" y="90" text-anchor="middle" class="lbl">like, share, skip</text>
+          <rect x="700" y="45" width="190" height="60" rx="10"></rect><text x="795" y="72" text-anchor="middle" class="lbl">Top predictions</text><text x="795" y="90" text-anchor="middle" class="lbl">fill my screen</text>
+          <path d="M200 75 H236 M430 75 H466 M660 75 H696" marker-end="url(#arrow)"></path>
+        </g>
+        <text x="105" y="30" text-anchor="middle">billions</text><text x="335" y="30" text-anchor="middle">hundreds</text><text x="565" y="30" text-anchor="middle">scored one by one</text><text x="795" y="30" text-anchor="middle">a handful</text>
+      </svg>
+    </div>
+
+    <div class="card">
+      <h3>What I did, and how the ranking system uses it</h3>
+      <p class="sub">Left: patterns from this page. Middle: the signal the platforms document. Right: what it predicts from it.</p>
       <div class="tablewrap"><table class="map">
-        <tr><th>In my data</th><th>What the ranking system learns</th></tr>
-        <tr><td>Likes spread across thousands of strangers</td><td>An embedding of "me" that sits near content, not people; candidates come from anywhere on the platform</td></tr>
-        <tr><td>Short video took over my likes on two apps</td><td>Short clips hold my attention; show more of them</td></tr>
-        <tr><td>Long sessions, all day</td><td>How likely I am to keep watching, which is the main thing Reels and Shorts rankers predict</td></tr>
-        <tr><td>Almost no dislikes or "Not interested" taps any more</td><td>Mostly positive signal; my silence reads as approval</td></tr>
-        <tr><td>More AI and tech content</td><td>Also my taste changing. The data can't separate taste from steering; both are probably true</td></tr>
+        <tr><th>In my data</th><th>Documented signal</th><th>What it predicts</th></tr>
+        <tr><td>Pets &amp; Animals went from 2% of my Instagram likes to about 20%</td><td>"How well the reel matches content you tend to interact with"</td><td>That I'll like the next animal video, so it shows me more</td></tr>
+        <tr><td>94% of my Instagram likes are Reels; #shorts showed up in my YouTube likes within two years of launch</td><td>Your activity by format: what you like, save and comment on</td><td>That short video holds my attention better than photos or long videos</td></tr>
+        <tr><td>My top 10 accounts and channels went from most of my likes to under 10% on both apps</td><td>Candidate retrieval: gather possible posts from anywhere, then score and rank them</td><td>A fresh pool of creators every session, not the same few accounts</td></tr>
+        <tr><td>Only about 3% of this year's Instagram likes went to accounts I follow</td><td>Reels and Explore: "the majority of what you see is from accounts you don't follow"</td><td>Which strangers' posts I'll engage with</td></tr>
+        <tr><td>Most of my likes come in long sessions of 20+</td><td>Watch time: whether you keep watching past the first seconds, and for how long</td><td>How likely I am to keep scrolling instead of closing the app</td></tr>
+        <tr><td>Almost no dislikes or "Not interested" taps any more</td><td>Negative feedback: dislikes, "Not interested", fast skips</td><td>With so few explicit "no"s, it learns almost entirely from what I engage with</td></tr>
       </table></div>
-      <p class="small muted">Sources: Meta, <a href="https://about.fb.com/news/2023/06/how-ai-ranks-content-on-facebook-and-instagram/">How AI influences what you see on Facebook and Instagram</a> (2023); Covington, Adams &amp; Sargin, <a href="https://research.google/pubs/deep-neural-networks-for-youtube-recommendations/">Deep Neural Networks for YouTube Recommendations</a> (RecSys 2016); Engineering at Meta, <a href="https://engineering.fb.com/2023/08/09/ml-applications/scaling-instagram-explore-recommendations-system/">Scaling the Instagram Explore recommendations system</a> (2023).</p>
+    </div>
+
+    <div class="card">
+      <h3>The feedback loop</h3>
+      <svg viewBox="0 0 900 150" role="img" aria-label="A loop: I like a post, the model updates its prediction, it shows more similar posts, I like more of them">
+        <g class="loop">
+          <rect x="10" y="45" width="190" height="60" rx="10"></rect><text x="105" y="80" text-anchor="middle" class="lbl">I like a pet video</text>
+          <rect x="240" y="45" width="190" height="60" rx="10"></rect><text x="335" y="72" text-anchor="middle" class="lbl">Model raises its guess</text><text x="335" y="90" text-anchor="middle" class="lbl">that I like pets</text>
+          <rect x="470" y="45" width="190" height="60" rx="10"></rect><text x="565" y="72" text-anchor="middle" class="lbl">More pet videos</text><text x="565" y="90" text-anchor="middle" class="lbl">rank near the top</text>
+          <rect x="700" y="45" width="190" height="60" rx="10"></rect><text x="795" y="72" text-anchor="middle" class="lbl">I see more of them,</text><text x="795" y="90" text-anchor="middle" class="lbl">so I like more of them</text>
+          <path d="M200 75 H236 M430 75 H466 M660 75 H696" marker-end="url(#arrow)"></path>
+          <path d="M795 105 V132 H105 V109" marker-end="url(#arrow)"></path>
+        </g>
+        <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"></path></marker></defs>
+      </svg>
+      <p class="small muted">My data fits this loop, but it can't prove it: I can't separate my taste changing from the app steering it. Both are probably true.</p>
+    </div>
+
+    <div class="card">
+      <h3>What does "pet video" actually mean to a machine?</h3>
+      <p>The categories on this page are mine. I named the topics, and a small language model (Instagram) or I myself (Reddit) decided which one each post belonged to. The platforms mostly don't work from a list of named categories like that. They turn every post, and every person, into a long list of numbers (an <b>embedding</b>). Posts that people engage with in similar ways end up with similar numbers, close together.</p>
+      <div class="tablewrap"><table class="map">
+        <tr><th></th><th>This page</th><th>The platforms</th></tr>
+        <tr><td>What it looks at</td><td>Captions, hashtags, subreddit names, titles</td><td>The video's frames and sound, its text, and who engages with it. Meta's Reels models learn "the relationships between the sound and images in a video."</td></tr>
+        <tr><td>What a category is</td><td>One of about 20 names I wrote, like "Pets &amp; Animals"</td><td>A neighborhood in embedding space, with no name needed</td></tr>
+        <tr><td>How specific it gets</td><td>"Pets &amp; Animals"</td><td>As fine as the data allows: roughly "orange cats knocking things off counters, set to this month's trending sound"</td></tr>
+        <tr><td>What it's for</td><td>Describing my history</td><td>Matching me to posts: a "two-tower" model builds one embedding for me and one for each post, and posts whose numbers sit close to mine are pulled in as candidates</td></tr>
+        <tr><td>Posts it can't read</td><td>About a third of Instagram posts had too little text, so I marked them Unclear</td><td>None. A silent video with no caption still has pixels, sound and viewers</td></tr>
+      </table></div>
+      <p>So when an app "learns I like pet videos," there is usually no switch labelled <i>pets</i>. Its guess about me moves toward a region full of animal clips. Named topics do exist where people need to see them, like the ad topics I can ask to see less of, or Google Discover's "less like Cryptocurrency" button. The ranking itself runs on the numbers.</p>
+    </div>
+
+    <div class="card">
+      <h3>Beyond likes: the other signals in my downloads</h3>
+      <p class="sub">Likes are only one input. The rest of the exports fill in most of the picture, and show where it stops.</p>
+      <ul class="list">
+        <li><b>Shares.</b> Instagram names resharing as one of its most important predictions. I went from sending about 4 reels for every 100 I liked in 2022 to about 11 in 2025. Friends' posts are about 8% of what I send but only 3% of what I like: sharing is the more social signal.</li>
+        <li><b>Everything I scrolled past.</b> Instagram's download covers only two weeks of what I viewed; I liked about 1 in 3. YouTube's keeps a few months of watch history, and most of those videos came from channels I don't subscribe to. The systems learned from everything I didn't like too.</li>
+        <li><b>Telling it "no".</b> 407 "Not interested" taps on Instagram and <span id="yt-ni"></span> on YouTube, against tens of thousands of likes. The most common topic I rejected on Instagram was fitness, which is also about 10% of what I like: to the system, the fitness posts I like and the ones I reject sit in different neighborhoods.</li>
+        <li><b>Advertising.</b> Instagram's download lists <b>5,311 advertisers</b> that uploaded a customer list matched to my profile. The ranking and ad systems learn from the same behavior.</li>
+        <li><b>Still missing: watch time.</b> The signal Reels and Shorts weigh most is whether I watch to the end or swipe away within seconds. No file in any of my downloads records how long I watched anything.</li>
+      </ul>
+      <p class="small muted">Sources: Adam Mosseri, <a href="https://about.instagram.com/blog/announcements/instagram-ranking-explained">Instagram Ranking Explained</a> (2023); Meta Transparency Center, <a href="https://transparency.meta.com/features/explaining-ranking/ig-reels-chaining/">Instagram Reels system card</a>; Meta AI, <a href="https://ai.meta.com/blog/learning-from-videos-to-understand-the-world/">Learning from videos to understand the world</a> (2021); Engineering at Meta, <a href="https://engineering.fb.com/2023/08/09/ml-applications/scaling-instagram-explore-recommendations-system/">Scaling the Instagram Explore recommendations system</a> (2023); Covington, Adams &amp; Sargin, <a href="https://research.google/pubs/deep-neural-networks-for-youtube-recommendations/">Deep Neural Networks for YouTube Recommendations</a> (RecSys 2016); YouTube, <a href="https://blog.youtube/inside-youtube/on-youtubes-recommendation-system/">On YouTube's recommendation system</a> (2021); Reddit, <a href="https://support.reddithelp.com/hc/en-us/articles/4402284777364-What-are-home-feed-recommendations">What are home feed recommendations</a>.</p>
     </div>
   </section>
 
   <section id="platforms">
-    <div class="eyebrow">07 · Platform by platform</div>
+    <div class="eyebrow">08 · Platform by platform</div>
     <h2>What I've been into</h2>
     <p>Each platform's interests, as shares of categorized activity per year. Instagram posts were categorized with sentence embeddings of their captions; Reddit subreddits were hand-labelled.</p>
     <div class="card">
