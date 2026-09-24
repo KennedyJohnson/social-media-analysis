@@ -107,38 +107,6 @@
     });
   }
 
-  // Stacked share per year; categories under 10% in every year fold into Other.
-  function stack(id, D, noun) {
-    const cats = D.categories, q = D.share_year;
-    const big = cats.filter((c, i) => Math.max(...q.values.map((r) => r[i])) >= 0.10).slice(0, 7);
-    const names = big.concat(["Other"]);
-    const colors = names.map((n, i) => (n === "Other" ? "var(--other)" : `var(--s${i + 1})`));
-    const rows = q.values.map((row) => {
-      const top = big.map((c) => row[cats.indexOf(c)]);
-      return top.concat([Math.max(0, 1 - top.reduce((a, b) => a + b, 0))]);
-    });
-    legend(id.replace("stack", "legend"), names.map((n, i) => ({ name: n, color: colors[i] })));
-    const W = 900, H = 300, L = 44, R = 8, T = 8, B = 28;
-    const s = svg(id, W, H);
-    const bw = (W - L - R) / rows.length;
-    const y = linear(0, 1, H - B, T);
-    yAxis(s, y, [0, 0.25, 0.5, 0.75, 1], L, W - R, (t) => pct(t));
-    rows.forEach((row, i) => {
-      const x = L + i * bw + 1;
-      let acc = 0;
-      row.forEach((v, j) => {
-        const y0 = y(acc), y1 = y(acc + v);
-        acc += v;
-        el("rect", { x, y: y1 + 1, width: Math.max(1, bw - 2), height: Math.max(0, y0 - y1 - 2), fill: colors[j] }, s);
-      });
-      const hit = el("rect", { x: L + i * bw, y: T, width: bw, height: H - B - T, fill: "transparent" }, s);
-      hover(hit, () => `<b>${q.index[i]}</b> · share of ${noun}<br>` +
-        names.map((n, j) => ({ n, v: row[j], c: colors[j] })).sort((a, b) => b.v - a.v)
-          .map((d) => `<span class="chip" style="background:${d.c}"></span>${d.n} <span class="m">${pct(d.v)}</span>`).join("<br>"));
-      text(s, x + bw / 2, H - 8, String(q.index[i]), { "text-anchor": "middle" });
-    });
-  }
-
   // ---- data shaping -----------------------------------------------------------
   const Y = YT.per_year, A = IG.algorithm, RY = RD.per_year;
   const yt = (k) => Object.fromEntries(Y.map((d) => [d.year, d[k]]));
@@ -166,6 +134,15 @@
   ], { max: 1, y0: 2013 });
   const rdPeakI = RY.upvotes.indexOf(Math.max(...RY.upvotes));
   $("f-habit").innerHTML = `<b>Reddit faded as Reels arrived.</b> My Reddit upvotes peaked in ${RY.index[rdPeakI]} (${fmt.format(RY.upvotes[rdPeakI])}) and fell to ${fmt.format(RY.upvotes[RY.index.indexOf(2025)])} in 2025. Instagram went the other way: my likes jumped ${Math.round(igPeak.growth)}× in ${igPeak.year}, the year after Reels took over my feed. YouTube held steady through it all. Reddit is the one platform here where, for most of my time on it, I picked the communities and the ranking was the same for everyone. Instagram's Reels feed is the most personalized. I didn't plan the switch, but my attention ended up there.`;
+
+  const rdW = byYear(RY.index, RY.written);
+  lines("talk", [
+    { name: "Reddit posts & comments", color: COL.rd, data: rdW },
+    { name: "YouTube comments & chats", color: COL.yt, data: Object.fromEntries(Y.map((d) => [d.year, d.comments + d.live_chats])) },
+  ], { f: (v) => fmt.format(Math.round(v)) });
+  const ytTalkPeak = Y.reduce((b, r) => (r.comments > b.comments ? r : b));
+  const ytLate = Y.filter((d) => d.year >= 2022), talkLate = ytLate.reduce((t, d) => t + d.comments + d.live_chats, 0), likeLate = ytLate.reduce((t, d) => t + d.likes, 0);
+  $("f-talk").innerHTML = `<b>I went from participant to audience.</b> I wrote ${fmt.format(ytTalkPeak.comments)} YouTube comments in ${ytTalkPeak.year} and ${fmt.format(Y.find((d) => d.year === 2025).comments)} in 2025. On Reddit I wrote ${rdW[2017]} posts and comments in 2017 and ${rdW[2025]} in 2025. Since 2022 I've liked about ${fmt.format(Math.round(likeLate / Math.max(1, talkLate)))} YouTube videos for every comment or chat message I've written. Algorithmic feeds don't need me to say anything; a like, or just watching, is enough signal.`;
 
   // ---- 02 algorithm ---------------------------------------------------------------
   lines("top10", [
@@ -231,8 +208,14 @@
   $("yt-ni").textContent = fmt.format(YT.totals.not_interested);
 
   // ---- 08 platforms ------------------------------------------------------------------
-  stack("ig-stack", IG, "likes");
-  stack("rd-stack", RD, "upvotes");
+  lines("ig-cat-chart", [
+    { name: "Pets & Animals", color: COL.ig, data: catShare(IG, "Pets & Animals") },
+    { name: "Friends & Life Updates", color: "var(--other)", data: catShare(IG, "Friends & Life Updates") },
+  ], { max: 0.25 });
+  lines("rd-cat-chart", [
+    { name: "Interesting & Viral", color: COL.rd, data: catShare(RD, "Interesting & Viral") },
+    { name: "Memes & Humor", color: "var(--other)", data: catShare(RD, "Memes & Humor") },
+  ], { max: 0.5 });
   (function sentiment() {
     const sm = IG.sentiment.month;
     const yrs = [...new Set(sm.index.map((m) => +m.slice(0, 4)))];

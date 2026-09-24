@@ -37,6 +37,16 @@ def main():
     size = likes.groupby("sess").size()
     likes["sess_size"] = likes.sess.map(size)
 
+    # My own comments and live-chat messages (Takeout CSVs); only yearly counts are used.
+    def yearly(pattern, col):
+        files = list((ROOT / "data").rglob(pattern))
+        if not files:
+            return pd.Series(dtype=int)
+        c = pd.concat([pd.read_csv(f, usecols=[col]) for f in files])
+        return pd.to_datetime(c[col], format="ISO8601").dt.year.value_counts()
+    comments = yearly("comments*.csv", "Comment Create Timestamp")
+    chats = yearly("live chats.csv", "Live Chat Create Timestamp")
+
     per_year = []
     for y in years:
         l = likes[likes.year == y]
@@ -45,6 +55,7 @@ def main():
         ss = size[l.sess.unique()]
         per_year.append({
             "year": y, "likes": len(l),
+            "comments": int(comments.get(y, 0)), "live_chats": int(chats.get(y, 0)),
             "dislikes": int((d.year.eq(y) & d.action.eq("Disliked")).sum()),
             "not_interested": int((d.year.eq(y) & d.action.str.startswith("Dismissed")).sum()),
             "subscribed_n": int((d.year.eq(y) & d.action.eq("Subscribed to")).sum()),
@@ -82,7 +93,8 @@ def main():
     out = {"generated": pd.Timestamp.now().strftime("%Y-%m-%d"),
            "totals": {"likes": len(likes), "first": int(likes.year.min()), "subscriptions": int(len(subs)),
                       "not_interested": int(d.action.str.startswith("Dismissed").sum()),
-                      "dislikes": int((d.action == "Disliked").sum())},
+                      "dislikes": int((d.action == "Disliked").sum()),
+                      "comments": int(comments.sum()), "live_chats": int(chats.sum())},
            "per_year": per_year, "hours": hours, "hours_years": f"{years[-1] - 3}-{years[-1]}", "watch": watch}
 
     # Privacy check: every string in the output must be a key or one of these values.
