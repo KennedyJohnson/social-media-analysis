@@ -39,6 +39,9 @@ python reddit/scripts/build_site_data.py "path/to/reddit-export"
 python youtube/scripts/parse_export.py "path/to/Takeout" ["path/to/Takeout-2" ...]
 python youtube/scripts/build_site_data.py
 
+# Cross-platform trends (after the parse steps)
+python scripts/cross_platform.py
+
 python -m http.server -d docs 8000
 ```
 

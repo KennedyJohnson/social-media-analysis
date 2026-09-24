@@ -1,6 +1,6 @@
 /* Charts for the combined social media data story. Plain SVG, no dependencies. Reads window.IG, window.RD, window.YT. */
 (function () {
-  const IG = window.IG, RD = window.RD, YT = window.YT;
+  const IG = window.IG, RD = window.RD, YT = window.YT, TR = window.TR;
   const NS = "http://www.w3.org/2000/svg";
   const fmt = new Intl.NumberFormat("en-US");
   const pct = (v, d = 0) => (v * 100).toFixed(d) + "%";
@@ -144,6 +144,15 @@
   const ytLate = Y.filter((d) => d.year >= 2022), talkLate = ytLate.reduce((t, d) => t + d.comments + d.live_chats, 0), likeLate = ytLate.reduce((t, d) => t + d.likes, 0);
   $("f-talk").innerHTML = `<b>I went from participant to audience.</b> I wrote ${fmt.format(ytTalkPeak.comments)} YouTube comments in ${ytTalkPeak.year} and ${fmt.format(Y.find((d) => d.year === 2025).comments)} in 2025. On Reddit I wrote ${rdW[2017]} posts and comments in 2017 and ${rdW[2025]} in 2025. Since 2022 I've liked about ${fmt.format(Math.round(likeLate / Math.max(1, talkLate)))} YouTube videos for every comment or chat message I've written. Algorithmic feeds don't need me to say anything; a like, or just watching, is enough signal.`;
 
+  const LQ = TR.lockdown.youtube, lq = Object.keys(LQ);
+  bars("lockdown", lq.map((k) => k.replace("Q", " Q")), lq.map((k) => LQ[k]), (v) => fmt.format(v) + " likes", COL.yt, { labelEvery: 2, axisFmt: (v) => fmt.format(Math.round(v)) });
+  (function markLockdown() {
+    const s = $("lockdown").querySelector("svg"), i = lq.indexOf("2020Q1"), bw = (900 - 44 - 4) / lq.length, x = 44 + (i + 0.67) * bw;
+    el("line", { x1: x, x2: x, y1: 8, y2: 196, stroke: "var(--text-muted)", "stroke-dasharray": "4 4" }, s);
+  })();
+  const sum = (o, y) => Object.entries(o).filter(([k]) => k.startsWith(y)).reduce((t, [, v]) => t + v, 0);
+  $("f-lockdown").innerHTML = `<b>The pandemic went to YouTube and Reddit, not Instagram.</b> I liked ${fmt.format(sum(LQ, "2019"))} YouTube videos in 2019 and ${fmt.format(sum(LQ, "2020"))} in 2020, peaking at ${fmt.format(LQ["2021Q1"])} in the first quarter of 2021. My Reddit upvotes also hit their all-time high in 2020. Instagram barely moved (${fmt.format(sum(TR.lockdown.instagram, "2019"))} likes in 2019, ${fmt.format(sum(TR.lockdown.instagram, "2020"))} in 2020). The big Instagram jump came two years later with Reels, so it was the feed that pulled me in, not the extra free time.`;
+
   // ---- 02 algorithm ---------------------------------------------------------------
   lines("top10", [
     { name: "YouTube", color: COL.yt, data: yt("top10_share") },
@@ -160,6 +169,13 @@
   const yt25 = Y.find((d) => d.year === 2025);
   $("f-algo").innerHTML = `<b>On every platform, my favorites stopped mattering.</b> In ${firstYT.year} my 10 most-liked YouTube channels got ${pct(firstYT.top10_share)} of my likes; in 2025, ${pct(yt25.top10_share)}. On Instagram my top 10 went from ${pct(A[0].top10_share)} (${A[0].year}) to ${pct(A[A.length - 1].top10_share)} (${A[A.length - 1].year}). Subscriptions tell the same story: likes on YouTube channels I was subscribed to peaked at ${pct(ytSubPeak.subscribed_share)} in ${ytSubPeak.year} and fell to ${pct(yt25.subscribed_share)} in 2025, and only ${pct(A[A.length - 1].followed_share)} of this year's Instagram likes went to accounts I follow. About half of my YouTube likes each year now go to a channel I've never liked before (${pct(yt25.new_channel_share)} in 2025, versus ${pct(firstYT.new_channel_share)} in ${firstYT.year}). Reddit is the exception: most of my upvotes stayed in subreddits I chose, until I mostly stopped using it.`;
 
+  const NA = TR.never_again;
+  lines("once", [
+    { name: "Instagram accounts", color: COL.ig, data: NA.instagram },
+    { name: "YouTube channels", color: COL.yt, data: NA.youtube },
+  ], { max: 1, y0: 2016 });
+  $("f-once").innerHTML = `<b>Creators became disposable.</b> Of the Instagram accounts I first liked in 2019, ${pct(NA.instagram[2019])} never got a second like. For accounts I found in 2025, it's ${pct(NA.instagram[2025])}. YouTube went from ${pct(NA.youtube[2016])} in 2016 to ${pct(NA.youtube[2025])} in 2025. The feed keeps pulling in new creators, and it's the feed I come back to, not any one person on it.`;
+
   // ---- 03 short-form ---------------------------------------------------------------
   lines("short-chart", [
     { name: "Instagram: Reels", color: COL.ig, data: ig("reel_share") },
@@ -167,6 +183,12 @@
   ], { max: 1, events: [[2020 + 7 / 12, "Reels"], [2021 + 2 / 12, "Shorts"]] });
   const ytShortPeak = Y.reduce((b, r) => (r.short_share > b.short_share ? r : b));
   $("f-short").innerHTML = `<b>The short-video switch happened within two years on both apps.</b> Reels were ${pct(A.find((d) => d.year === 2020).reel_share)} of my Instagram likes in 2020, ${pct(A.find((d) => d.year === 2022).reel_share)} in 2022 and ${pct(A[A.length - 1].reel_share)} in ${A[A.length - 1].year}. On YouTube, liked videos tagged #shorts went from zero before 2021 to ${pct(ytShortPeak.short_share)} in ${ytShortPeak.year}, and that's a floor, since most Shorts carry no tag. Short video is the format where the app picks every single item for you.`;
+
+  lines("style", [
+    { name: "Emoji in title", color: COL.yt, data: TR.emoji.youtube },
+    { name: "ALL-CAPS word in title", color: "var(--other)", data: TR.caps.youtube },
+  ], { max: 0.5, y0: 2016 });
+  $("f-style").innerHTML = `<b>What gets my like looks different now.</b> In 2016–17, about ${pct(TR.caps.youtube[2017])} of the YouTube videos I liked shouted a word in ALL CAPS, the classic clickbait title. By 2025 that fell to ${pct(TR.caps.youtube[2025])}, while titles with an emoji went from almost none to ${pct(TR.emoji.youtube[2025])}. That's the Shorts style: a short caption, an emoji and hashtags written for a swipe feed rather than a search result or thumbnail grid. Emoji in the Instagram captions I liked peaked the same year Reels took over (${pct(TR.emoji.instagram[2022])} in 2022, up from ${pct(TR.emoji.instagram[2019])} in 2019).`;
 
   // ---- 04 doomscrolling ----------------------------------------------------------------
   const W8 = YT.watch;
