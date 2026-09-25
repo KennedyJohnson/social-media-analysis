@@ -165,9 +165,8 @@
     { name: "Instagram (followed accounts)", color: COL.ig, data: ig("followed_share") },
   ], { max: 1 });
   legend("subs-legend", [{ name: "Reddit (subscribed subreddits)", color: COL.rd }, { name: "YouTube (subscribed channels)", color: COL.yt }, { name: "Instagram (followed accounts)", color: COL.ig }]);
-  const ytSubPeak = Y.reduce((b, r) => (r.subscribed_share > b.subscribed_share ? r : b));
   const yt25 = Y.find((d) => d.year === 2025);
-  $("f-algo").innerHTML = `<b>On every platform, my favorites stopped mattering.</b> In ${firstYT.year} my 10 most-liked YouTube channels got ${pct(firstYT.top10_share)} of my likes; in 2025, ${pct(yt25.top10_share)}. On Instagram my top 10 went from ${pct(A[0].top10_share)} (${A[0].year}) to ${pct(A[A.length - 1].top10_share)} (${A[A.length - 1].year}). Subscriptions tell the same story: likes on YouTube channels I was subscribed to peaked at ${pct(ytSubPeak.subscribed_share)} in ${ytSubPeak.year} and fell to ${pct(yt25.subscribed_share)} in 2025, and only ${pct(A[A.length - 1].followed_share)} of this year's Instagram likes went to accounts I follow. About half of my YouTube likes each year now go to a channel I've never liked before (${pct(yt25.new_channel_share)} in 2025, versus ${pct(firstYT.new_channel_share)} in ${firstYT.year}). Reddit is the exception: most of my upvotes stayed in subreddits I chose, until I mostly stopped using it.`;
+  $("f-algo").innerHTML = `<b>On every platform, my favorites stopped mattering.</b> My top 10 YouTube channels fell from ${pct(firstYT.top10_share)} of my likes (${firstYT.year}) to ${pct(yt25.top10_share)} (2025); my top 10 Instagram accounts from ${pct(A[0].top10_share)} to ${pct(A[A.length - 1].top10_share)}. Only ${pct(A[A.length - 1].followed_share)} of this year's Instagram likes went to accounts I follow. Reddit held out, until I mostly stopped using it.`;
 
   const NA = TR.never_again;
   lines("once", [
@@ -261,7 +260,7 @@
     ]);
     // Two-platform comparison: horizontal bars, each in its platform's color, labelled directly.
     const igTop = IG.algorithm[IG.algorithm.length - 1];
-    const rows = [["Instagram: top 10 accounts", igTop.top10_share, COL.ig], ["iMessage: top 10 conversations", IM.concentration.top10, "var(--im)"]];
+    const rows = [["Instagram: top 10 accounts", igTop.top10_share, COL.ig], ["iMessage: top 10 conversations", IM.concentration.top10, "var(--im)"]].concat(window.SC ? [["Snapchat: top 10 conversations", window.SC.totals.top10, "var(--sc)"]] : []);
     const W = 900, rowH = 44, L = 250, s = svg("im-conc", W, rows.length * rowH + 8);
     rows.forEach(([label, v, color], i) => {
       const y = 8 + i * rowH, w = (W - L - 70) * v;
@@ -281,9 +280,7 @@
     $("im-months-sub").textContent = `${mlabel(full[0].month)} – ${mlabel(full[full.length - 1].month)} (full months only)`;
     bars("im-months", full.map((d) => mlabel(d.month)), full.map((d) => d.sent), (v) => fmt.format(v) + " texts", "var(--im)", { axisFmt: (v) => fmt.format(v) });
     const top = taps[0];
-    $("f-texts").innerHTML = `<b>The opposite of a feed.</b> On Instagram this year my top 10 accounts got ${pct(igTop.top10_share)} of my likes; in iMessage my top 10 conversations got ${pct(IM.concentration.top10)} of my texts, and a single one got ${pct(IM.concentration.top1)}. ` +
-      `${pct(T.group_share)} of what I send goes to group chats. I reply in a median of ${IM.reply_minutes.median} minutes and only ${pct(IM.late_share, 1)} of my texts go out between midnight and 5am. ` +
-      `Tapbacks work like likes, but for people: "${top.type}" is my most-used at ${pct(top.n / tapTotal)}, and I gave ${fmt.format(T.tapbacks_given)} in a year.`;
+    $("f-texts").innerHTML = `<b>The opposite of a feed.</b> My top 10 Instagram accounts got ${pct(igTop.top10_share)} of my likes this year; my top 10 conversations got ${pct(IM.concentration.top10)} of my texts${window.SC ? ` (${pct(window.SC.totals.top10)} on Snapchat)` : ""}. I reply in a median of ${IM.reply_minutes.median} minutes, and my go-to tapback is ${top.type}.`;
   })();
 
   // ---- 10 · Apple Health -------------------------------------------------------
@@ -291,7 +288,6 @@
     const HL = window.HL, IM = window.IM;
     if (!HL || !$("hl-tiles")) return;
     const S = HL.steps, SL = HL.sleep;
-    const hm = (h) => { const t = h % 24, m = Math.round((t % 1) * 60); return `${(Math.floor(t) % 12) || 12}:${String(m).padStart(2, "0")}${t < 12 ? "am" : "pm"}`; };
     tiles("hl-tiles", [
       [fmt.format(S.per_day), "steps per day since 2023"],
       [pct(S.weekend / S.weekday - 1), "more steps on weekends"],
@@ -326,11 +322,28 @@
     $("hl-months-sub").textContent = `${mlabel(S.months[0].month)} – ${mlabel(S.months[S.months.length - 1].month)}, full months only`;
     bars("hl-months", S.months.map((d) => mlabel(d.month)), S.months.map((d) => d.per_day), (v) => fmt.format(v) + " steps a day", "var(--hl)", { labelEvery: 6, axisFmt: (v) => fmt.format(v) });
     const night = (name) => series.find((d) => d.name === name).vals[3];
-    const others = series.filter((d) => d.name !== "Steps").map((d) => `${d.name === "Texts sent" ? "texts" : d.name} ${pct(d.vals[3])}`).join(", ");
-    const busiest = S.months.reduce((a, d) => (d.per_day > a.per_day ? d : a)), slowest = S.months.reduce((a, d) => (d.per_day < a.per_day ? d : a));
-    const y24 = SL.years.find((d) => d.year === 2024);
-    $("f-health").innerHTML = `<b>Night is the one part of the day the phone has to itself.</b> Through the day my steps follow the same shape as my scrolling and texting, most of it in the afternoon and evening. After 10pm they split: only ${pct(night("Steps"))} of my steps happen at night, against ${others}. ` +
-      `Steps have held around ${fmt.format(S.per_day)} a day for three years, peaking at ${fmt.format(busiest.per_day)} in ${mlabel(busiest.month)} and bottoming out at ${fmt.format(slowest.per_day)} in ${mlabel(slowest.month)}; weekends beat weekdays by ${pct(S.weekend / S.weekday - 1)}. ` +
-      (y24 ? `While my phone tracked sleep, my median bedtime was ${hm(12 + y24.bed)}, and ${pct(y24.after_1am)} of 2024's nights started after 1am.` : "");
+    const nv = series.filter((d) => d.name !== "Steps").map((d) => d.vals[3]), others = `${pct(Math.min(...nv))}–${pct(Math.max(...nv))}`;
+    $("f-health").innerHTML = `<b>Night is the one time the phone has me to itself.</b> Only ${pct(night("Steps"))} of my steps happen after 10pm, against ${others} of my texts and likes. Steps have held near ${fmt.format(S.per_day)} a day for three years, with ${pct(S.weekend / S.weekday - 1)} more on weekends.`;
+  })();
+
+  // ---- Snapchat (sections 07 and 09) --------------------------------------------
+  (function () {
+    const SC = window.SC;
+    if (!SC || !$("sc-tags")) return;
+    const T = SC.totals, st = SC.stats;
+    $("sc-tag-n").textContent = st.tags_weighted;
+    $("sc-tags-sub").textContent = `Spotlight hashtags Snapchat has weighted for me (weight 2+), out of ${st.tags_total} it lists`;
+    const tags = SC.tags;
+    const W = 900, rowH = 26, L = 170, s = svg("sc-tags", W, tags.length * rowH + 4), max = tags[0].w;
+    tags.forEach((d, i) => {
+      const y = 2 + i * rowH, w = (W - L - 40) * d.w / max;
+      text(s, 0, y + 16, "#" + d.tag);
+      el("path", { d: `M${L},${y + 4}H${L + w - 4}Q${L + w},${y + 4} ${L + w},${y + 8}V${y + 16}Q${L + w},${y + 20} ${L + w - 4},${y + 20}H${L}Z`, fill: "var(--sc)" }, s);
+      text(s, L + w + 6, y + 16, String(d.w));
+      hover(el("rect", { x: 0, y, width: W, height: rowH, fill: "transparent" }, s), () => `<b>#${d.tag}</b><br>interest weight ${d.w}`);
+    });
+    $("f-sc-tags").innerHTML = `<b>Nothing to go on but my taps.</b> I follow ${st.following} accounts, so Spotlight picks everything. It settled on #${tags[0].tag} first, then relationship drama.`;
+    bars("sc-years", SC.years.map((d) => String(d.year)), SC.years.map((d) => d.snaps + d.chats),
+      (v) => fmt.format(v) + " snaps + chat messages", "var(--sc)", { axisFmt: (v) => fmt.format(v) });
   })();
 })();

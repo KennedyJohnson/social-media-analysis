@@ -12,9 +12,9 @@
 <body>
 <main>
   <header class="hero">
-    <div class="eyebrow">A personal data story · Instagram · Reddit · YouTube · iMessage · Apple Health</div>
+    <div class="eyebrow">A personal data story · Instagram · Reddit · YouTube · Snapchat · iMessage · Apple Health</div>
     <h1>Fourteen years of being fed</h1>
-    <p class="lede">I downloaded everything Instagram, Reddit and Google keep on me and turned it into data. No names, no captions, no channels or searches, just aggregate patterns: how my scrolling changed as recommendation algorithms took over, what AI has to do with it, and why "doomscrolling" is such a good business.</p>
+    <p class="lede">I downloaded everything Instagram, Reddit, Google, Snapchat and my iPhone keep on me and turned it into data. No names, no captions, no messages or searches, just aggregate patterns: how my scrolling changed as recommendation algorithms took over, what AI has to do with it, why "doomscrolling" is such a good business, and where my friends went instead.</p>
     <div class="tiles" id="tiles"></div>
     <nav class="toc">
       <a href="#habit">01 · Three apps, one habit</a><a href="#algorithm">02 · Who chose what I saw</a><a href="#short">03 · Short video eats everything</a>
@@ -178,6 +178,13 @@
     </div>
 
     <div class="card">
+      <h3><span class="plat" style="color:var(--sc)">Snapchat</span>What Spotlight thinks I'm into</h3>
+      <p class="sub" id="sc-tags-sub"></p>
+      <div id="sc-tags"></div>
+      <p class="finding" id="f-sc-tags"></p>
+    </div>
+
+    <div class="card">
       <h3>What I did, and how the ranking system uses it</h3>
       <p class="sub">Left: patterns from this page. Middle: the signal the platforms document. Right: what it predicts from it.</p>
       <div class="tablewrap"><table class="map">
@@ -187,6 +194,7 @@
         <tr><td>My top 10 accounts and channels went from most of my likes to under 10% on both apps</td><td>Candidate retrieval: gather possible posts from anywhere, then score and rank them</td><td>A fresh pool of creators every session, not the same few accounts</td></tr>
         <tr><td>Only about 3% of this year's Instagram likes went to accounts I follow</td><td>Reels and Explore: "the majority of what you see is from accounts you don't follow"</td><td>Which strangers' posts I'll engage with</td></tr>
         <tr><td>Most of my likes come in long sessions of 20+</td><td>Watch time: whether you keep watching past the first seconds, and for how long</td><td>How likely I am to keep scrolling instead of closing the app</td></tr>
+        <tr><td>I follow 0 accounts on Snapchat, yet Spotlight has tagged me with <span id="sc-tag-n"></span> interest hashtags</td><td>Spotlight's interest tags, which Snapchat lists in its data export</td><td>Which strangers' videos to show me, with no follows to go on</td></tr>
         <tr><td>Almost no dislikes or "Not interested" taps any more</td><td>Negative feedback: dislikes, "Not interested", fast skips</td><td>With so few explicit "no"s, it learns almost entirely from what I engage with</td></tr>
       </table></div>
     </div>
@@ -262,11 +270,11 @@
   <section id="texts">
     <div class="eyebrow">09 · The group chat</div>
     <h2>My friends didn't leave. They moved to the group chat</h2>
-    <p>Friends' posts nearly vanished from my Instagram likes, so I pulled a year of my iMessages from an iPhone backup to see where that attention went. No ranking model decides what shows up here: every message is from someone I chose to talk to, in the order they sent it.</p>
+    <p>Friends' posts nearly vanished from my Instagram likes, so I pulled a year of iMessages to see where they went. No ranking model here: just people I chose, in the order they wrote.</p>
     <div class="tiles" id="im-tiles"></div>
     <div class="card">
       <h3>Feeds spread me thin. Texting doesn't</h3>
-      <p class="sub">Share of my activity that goes to my top 10 accounts (Instagram likes, this year) vs. my top 10 conversations (texts I sent)</p>
+      <p class="sub">Share of my activity that goes to my top 10 accounts (Instagram likes, this year) vs. my top 10 conversations (messages I sent in iMessage and Snapchat)</p>
       <div id="im-conc"></div>
     </div>
     <div class="card">
@@ -284,13 +292,18 @@
       <p class="sub" id="im-months-sub"></p>
       <div id="im-months"></div>
     </div>
+    <div class="card">
+      <h3><span class="plat" style="color:var(--sc)">Snapchat</span>The other group chat</h3>
+      <p class="sub">Snaps and chats per year (the export keeps saved and recent ones only)</p>
+      <div id="sc-years"></div>
+    </div>
     <p class="finding" id="f-texts"></p>
   </section>
 
   <section id="health">
     <div class="eyebrow">10 · Offline</div>
     <h2>What my phone knows when I'm not looking at it</h2>
-    <p>My phone counts steps whether or not I'm on it, so Apple Health is a record of the hours the feeds <i>didn't</i> get. Steps come from the phone only (not the watch, to avoid double counting), and sleep is the phone's "time in bed" estimate.</p>
+    <p>My phone counts steps whether or not I'm on it, so Apple Health records the hours the feeds <i>didn't</i> get. Steps are from the phone only, to avoid double counting with the watch.</p>
     <div class="tiles" id="hl-tiles"></div>
     <div class="card">
       <h3>When I move vs. when I'm on my phone</h3>
@@ -307,7 +320,7 @@
   </section>
 
   <footer>
-    <p><b>Data.</b> Instagram "Download your information" (HTML), Reddit data request (CSV) and Google Takeout (YouTube activity), and the Messages database from a local iPhone backup (the phone keeps one year of messages), which also held the Apple Health data. YouTube's export keeps likes, dislikes, subscriptions and "Not interested" taps back to 2012 but only the last few months of watch history. Times are US Central.</p>
+    <p><b>Data.</b> Instagram "Download your information" (HTML), Reddit data request (CSV) and Google Takeout (YouTube activity), and the Messages database from a local iPhone backup (the phone keeps one year of messages), which also held the Apple Health data. Snapchat "My Data" export (JSON). YouTube's export keeps likes, dislikes, subscriptions and "Not interested" taps back to 2012 but only the last few months of watch history. Times are US Central.</p>
     <p><b>Method.</b> Reddit votes aren't dated, so each is dated by interpolating Reddit's sequential IDs between my own dated posts. Instagram categories come from <code>all-MiniLM-L6-v2</code> embeddings, sentiment from <code>twitter-roberta-base-sentiment-latest</code>. Sessions are runs of likes under 10 minutes apart.</p>
     <p><b>Privacy.</b> Only aggregates are published: counts and shares by year, hour and category. No account, channel or subreddit names, captions, titles, searches, contacts, chat names, message text, health records beyond step and sleep totals, or individual timestamps. Raw exports stay on my machine, and each build fails if unexpected text reaches the page data. Code: <a href="https://github.com/KennedyJohnson/social-media-analysis">github.com/KennedyJohnson/social-media-analysis</a> · <a href="https://kennedyjohnson.github.io/">kennedyjohnson.github.io</a></p>
   </footer>
@@ -319,6 +332,7 @@
 <script src="data_trends.js"></script>
 <script src="data_imessage.js"></script>
 <script src="data_health.js"></script>
+<script src="data_snapchat.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
