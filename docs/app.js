@@ -247,4 +247,90 @@
     }));
     bars("sent", yrs.map(String), yrs.map((y) => avg[y]), (v) => "mean sentiment " + signed(v), "var(--pos)", { axisFmt: signed });
   })();
+
+  // ---- 09 · iMessage ----------------------------------------------------------
+  (function () {
+    const IM = window.IM;
+    if (!IM || !$("im-tiles")) return;
+    const T = IM.totals;
+    tiles("im-tiles", [
+      [fmt.format(T.sent), "texts I sent in a year"],
+      [T.per_day, "texts per day"],
+      [fmt.format(T.tapbacks_given), "tapbacks I gave"],
+      [IM.reply_minutes.median + " min", "median time to reply"],
+    ]);
+    // Two-platform comparison: horizontal bars, each in its platform's color, labelled directly.
+    const igTop = IG.algorithm[IG.algorithm.length - 1];
+    const rows = [["Instagram: top 10 accounts", igTop.top10_share, COL.ig], ["iMessage: top 10 conversations", IM.concentration.top10, "var(--im)"]];
+    const W = 900, rowH = 44, L = 250, s = svg("im-conc", W, rows.length * rowH + 8);
+    rows.forEach(([label, v, color], i) => {
+      const y = 8 + i * rowH, w = (W - L - 70) * v;
+      text(s, 0, y + 20, label);
+      el("path", { d: `M${L},${y + 6}H${L + w - 4}Q${L + w},${y + 6} ${L + w},${y + 10}V${y + 24}Q${L + w},${y + 28} ${L + w - 4},${y + 28}H${L}Z`, fill: color }, s);
+      text(s, L + w + 8, y + 22, pct(v));
+      hover(el("rect", { x: 0, y, width: W, height: rowH, fill: "transparent" }, s), () => `<b>${label}</b><br>${pct(v, 1)} of my activity`);
+    });
+    // Same four parts of the day as the YouTube and Instagram charts.
+    const imParts = parts.map(([, a, b]) => { let s = 0; for (let h = a; h < b; h++) s += IM.hours[h % 24]; return s; });
+    bars("im-hours", parts.map((p) => p[0]), imParts, (v) => pct(v, 1) + " of texts sent", "var(--im)");
+    const taps = IM.tapbacks.slice().sort((a, b) => b.n - a.n);
+    const tapTotal = taps.reduce((a, d) => a + d.n, 0);
+    bars("im-taps", taps.map((d) => d.type), taps.map((d) => d.n / tapTotal), (v) => pct(v, 1) + " of tapbacks", "var(--im)");
+    const full = IM.months.slice(1, -1);  // first and last months are partial
+    const mlabel = (m) => new Date(m + "-15").toLocaleString("en-US", { month: "short", year: "2-digit" });
+    $("im-months-sub").textContent = `${mlabel(full[0].month)} – ${mlabel(full[full.length - 1].month)} (full months only)`;
+    bars("im-months", full.map((d) => mlabel(d.month)), full.map((d) => d.sent), (v) => fmt.format(v) + " texts", "var(--im)", { axisFmt: (v) => fmt.format(v) });
+    const top = taps[0];
+    $("f-texts").innerHTML = `<b>The opposite of a feed.</b> On Instagram this year my top 10 accounts got ${pct(igTop.top10_share)} of my likes; in iMessage my top 10 conversations got ${pct(IM.concentration.top10)} of my texts, and a single one got ${pct(IM.concentration.top1)}. ` +
+      `${pct(T.group_share)} of what I send goes to group chats. I reply in a median of ${IM.reply_minutes.median} minutes and only ${pct(IM.late_share, 1)} of my texts go out between midnight and 5am. ` +
+      `Tapbacks work like likes, but for people: "${top.type}" is my most-used at ${pct(top.n / tapTotal)}, and I gave ${fmt.format(T.tapbacks_given)} in a year.`;
+  })();
+
+  // ---- 10 · Apple Health -------------------------------------------------------
+  (function () {
+    const HL = window.HL, IM = window.IM;
+    if (!HL || !$("hl-tiles")) return;
+    const S = HL.steps, SL = HL.sleep;
+    const hm = (h) => { const t = h % 24, m = Math.round((t % 1) * 60); return `${(Math.floor(t) % 12) || 12}:${String(m).padStart(2, "0")}${t < 12 ? "am" : "pm"}`; };
+    tiles("hl-tiles", [
+      [fmt.format(S.per_day), "steps per day since 2023"],
+      [pct(S.weekend / S.weekday - 1), "more steps on weekends"],
+      [pct(S.over_10k), "of days over 10,000 steps"],
+      [SL.hours.toFixed(1) + " h", "median time in bed (2023–24)"],
+    ]);
+    // Grouped bars: parts of the day x activity. Legend + a direct label on the tallest bar in each group.
+    const series = [
+      // Order checked for colorblind separation between neighbors.
+      { name: "Texts sent", color: "var(--im)", vals: IM ? parts.map(([, a, b]) => { let t = 0; for (let h = a; h < b; h++) t += IM.hours[h % 24]; return t; }) : null },
+      { name: "Steps", color: "var(--hl)", vals: S.parts.map((d) => d.share) },
+      { name: "YouTube likes", color: COL.yt, vals: ytParts },
+      { name: "Instagram likes", color: COL.ig, vals: IG.time_of_day.map((d) => d.share) },
+    ].filter((d) => d.vals);
+    legend("hl-parts-legend", series);
+    const W = 900, H = 240, L = 44, R = 4, T = 8, B = 24, s = svg("hl-parts", W, H);
+    const max = niceMax(Math.max(...series.flatMap((d) => d.vals)));
+    const y = linear(0, max, H - B, T);
+    yAxis(s, y, [0, max / 2, max], L, W - R, pct);
+    const gw = (W - L - R) / parts.length, bw = Math.min(40, (gw - 24) / series.length);
+    parts.forEach(([label], i) => {
+      const x0 = L + i * gw + (gw - bw * series.length) / 2;
+      series.forEach((d, j) => {
+        const v = d.vals[i], x = x0 + j * bw + 1, w = bw - 2, top = y(v), base = H - B, r = Math.min(4, (base - top) / 2, w / 2);
+        el("path", { d: `M${x},${base}V${top + r}Q${x},${top} ${x + r},${top}H${x + w - r}Q${x + w},${top} ${x + w},${top + r}V${base}Z`, fill: d.color }, s);
+        text(s, x + w / 2, top - 4, pct(v), { "text-anchor": "middle", class: "val" });
+        hover(el("rect", { x: x - 1, y: T, width: bw, height: H - B - T, fill: "transparent" }, s), () => `<b>${label} · ${d.name}</b><br>${pct(v, 1)} of the day's total`);
+      });
+      text(s, L + i * gw + gw / 2, H - 6, label, { "text-anchor": "middle" });
+    });
+    const mlabel = (m) => new Date(m + "-15").toLocaleString("en-US", { month: "short", year: "2-digit" });
+    $("hl-months-sub").textContent = `${mlabel(S.months[0].month)} – ${mlabel(S.months[S.months.length - 1].month)}, full months only`;
+    bars("hl-months", S.months.map((d) => mlabel(d.month)), S.months.map((d) => d.per_day), (v) => fmt.format(v) + " steps a day", "var(--hl)", { labelEvery: 6, axisFmt: (v) => fmt.format(v) });
+    const night = (name) => series.find((d) => d.name === name).vals[3];
+    const others = series.filter((d) => d.name !== "Steps").map((d) => `${d.name === "Texts sent" ? "texts" : d.name} ${pct(d.vals[3])}`).join(", ");
+    const busiest = S.months.reduce((a, d) => (d.per_day > a.per_day ? d : a)), slowest = S.months.reduce((a, d) => (d.per_day < a.per_day ? d : a));
+    const y24 = SL.years.find((d) => d.year === 2024);
+    $("f-health").innerHTML = `<b>Night is the one part of the day the phone has to itself.</b> Through the day my steps follow the same shape as my scrolling and texting, most of it in the afternoon and evening. After 10pm they split: only ${pct(night("Steps"))} of my steps happen at night, against ${others}. ` +
+      `Steps have held around ${fmt.format(S.per_day)} a day for three years, peaking at ${fmt.format(busiest.per_day)} in ${mlabel(busiest.month)} and bottoming out at ${fmt.format(slowest.per_day)} in ${mlabel(slowest.month)}; weekends beat weekdays by ${pct(S.weekend / S.weekday - 1)}. ` +
+      (y24 ? `While my phone tracked sleep, my median bedtime was ${hm(12 + y24.bed)}, and ${pct(y24.after_1am)} of 2024's nights started after 1am.` : "");
+  })();
 })();

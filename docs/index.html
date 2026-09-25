@@ -12,7 +12,7 @@
 <body>
 <main>
   <header class="hero">
-    <div class="eyebrow">A personal data story · Instagram · Reddit · YouTube</div>
+    <div class="eyebrow">A personal data story · Instagram · Reddit · YouTube · iMessage · Apple Health</div>
     <h1>Fourteen years of being fed</h1>
     <p class="lede">I downloaded everything Instagram, Reddit and Google keep on me and turned it into data. No names, no captions, no channels or searches, just aggregate patterns: how my scrolling changed as recommendation algorithms took over, what AI has to do with it, and why "doomscrolling" is such a good business.</p>
     <div class="tiles" id="tiles"></div>
@@ -259,10 +259,57 @@
     </div>
   </section>
 
+  <section id="texts">
+    <div class="eyebrow">09 · The group chat</div>
+    <h2>My friends didn't leave. They moved to the group chat</h2>
+    <p>Friends' posts nearly vanished from my Instagram likes, so I pulled a year of my iMessages from an iPhone backup to see where that attention went. No ranking model decides what shows up here: every message is from someone I chose to talk to, in the order they sent it.</p>
+    <div class="tiles" id="im-tiles"></div>
+    <div class="card">
+      <h3>Feeds spread me thin. Texting doesn't</h3>
+      <p class="sub">Share of my activity that goes to my top 10 accounts (Instagram likes, this year) vs. my top 10 conversations (texts I sent)</p>
+      <div id="im-conc"></div>
+    </div>
+    <div class="card">
+      <h3>When I text</h3>
+      <p class="sub">Share of the texts I sent, by part of the day</p>
+      <div id="im-hours"></div>
+    </div>
+    <div class="card">
+      <h3>The like button, inside friendships</h3>
+      <p class="sub">Tapbacks I gave, by type</p>
+      <div id="im-taps"></div>
+    </div>
+    <div class="card">
+      <h3>Texts I sent per month</h3>
+      <p class="sub" id="im-months-sub"></p>
+      <div id="im-months"></div>
+    </div>
+    <p class="finding" id="f-texts"></p>
+  </section>
+
+  <section id="health">
+    <div class="eyebrow">10 · Offline</div>
+    <h2>What my phone knows when I'm not looking at it</h2>
+    <p>My phone counts steps whether or not I'm on it, so Apple Health is a record of the hours the feeds <i>didn't</i> get. Steps come from the phone only (not the watch, to avoid double counting), and sleep is the phone's "time in bed" estimate.</p>
+    <div class="tiles" id="hl-tiles"></div>
+    <div class="card">
+      <h3>When I move vs. when I'm on my phone</h3>
+      <p class="sub">Share of each activity by part of the day</p>
+      <div class="legend" id="hl-parts-legend"></div>
+      <div id="hl-parts"></div>
+    </div>
+    <div class="card">
+      <h3>Average daily steps per month</h3>
+      <p class="sub" id="hl-months-sub"></p>
+      <div id="hl-months"></div>
+    </div>
+    <p class="finding" id="f-health"></p>
+  </section>
+
   <footer>
-    <p><b>Data.</b> Instagram "Download your information" (HTML), Reddit data request (CSV) and Google Takeout (YouTube activity). YouTube's export keeps likes, dislikes, subscriptions and "Not interested" taps back to 2012 but only the last few months of watch history. Times are US Central.</p>
+    <p><b>Data.</b> Instagram "Download your information" (HTML), Reddit data request (CSV) and Google Takeout (YouTube activity), and the Messages database from a local iPhone backup (the phone keeps one year of messages), which also held the Apple Health data. YouTube's export keeps likes, dislikes, subscriptions and "Not interested" taps back to 2012 but only the last few months of watch history. Times are US Central.</p>
     <p><b>Method.</b> Reddit votes aren't dated, so each is dated by interpolating Reddit's sequential IDs between my own dated posts. Instagram categories come from <code>all-MiniLM-L6-v2</code> embeddings, sentiment from <code>twitter-roberta-base-sentiment-latest</code>. Sessions are runs of likes under 10 minutes apart.</p>
-    <p><b>Privacy.</b> Only aggregates are published: counts and shares by year, hour and category. No account, channel or subreddit names, captions, titles, searches, messages or individual timestamps. Raw exports stay on my machine, and each build fails if unexpected text reaches the page data. Code: <a href="https://github.com/KennedyJohnson/social-media-analysis">github.com/KennedyJohnson/social-media-analysis</a> · <a href="https://kennedyjohnson.github.io/">kennedyjohnson.github.io</a></p>
+    <p><b>Privacy.</b> Only aggregates are published: counts and shares by year, hour and category. No account, channel or subreddit names, captions, titles, searches, contacts, chat names, message text, health records beyond step and sleep totals, or individual timestamps. Raw exports stay on my machine, and each build fails if unexpected text reaches the page data. Code: <a href="https://github.com/KennedyJohnson/social-media-analysis">github.com/KennedyJohnson/social-media-analysis</a> · <a href="https://kennedyjohnson.github.io/">kennedyjohnson.github.io</a></p>
   </footer>
 </main>
 <div class="tip" id="tip"></div>
@@ -270,6 +317,8 @@
 <script src="data_reddit.js"></script>
 <script src="data_youtube.js"></script>
 <script src="data_trends.js"></script>
+<script src="data_imessage.js"></script>
+<script src="data_health.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

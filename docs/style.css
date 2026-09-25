@@ -74,7 +74,7 @@ table.map td { color: var(--text-secondary); }
 svg .loop rect { fill: var(--surface-0); stroke: var(--border); }
 svg .loop path { fill: none; stroke: var(--s1); stroke-width: 2; }
 svg .arrowhead { fill: var(--s1); stroke: none; }
-:root { --ig: var(--s5); --rd: var(--s2); --yt: var(--s1); --gg: var(--s1); }
+:root { --ig: var(--s5); --rd: var(--s2); --yt: var(--s1); --gg: var(--s1); --im: var(--s3); --hl: var(--s4); }
 .small { font-size: 13px; } .muted { color: var(--text-muted); }
 ul.list { padding-left: 18px; color: var(--text-secondary); } ul.list li { margin: 6px 0; }
 .plat { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 10px; border: 1px solid var(--border); margin-right: 6px; }
