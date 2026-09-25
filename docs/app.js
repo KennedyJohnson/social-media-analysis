@@ -329,20 +329,9 @@
   // ---- Snapchat (sections 07 and 09) --------------------------------------------
   (function () {
     const SC = window.SC;
-    if (!SC || !$("sc-tags")) return;
-    const T = SC.totals, st = SC.stats;
+    if (!SC) return;
+    const st = SC.stats;
     $("sc-tag-n").textContent = st.tags_weighted;
-    $("sc-tags-sub").textContent = `Spotlight hashtags Snapchat has weighted for me (weight 2+), out of ${st.tags_total} it lists`;
-    const tags = SC.tags;
-    const W = 900, rowH = 26, L = 170, s = svg("sc-tags", W, tags.length * rowH + 4), max = tags[0].w;
-    tags.forEach((d, i) => {
-      const y = 2 + i * rowH, w = (W - L - 40) * d.w / max;
-      text(s, 0, y + 16, "#" + d.tag);
-      el("path", { d: `M${L},${y + 4}H${L + w - 4}Q${L + w},${y + 4} ${L + w},${y + 8}V${y + 16}Q${L + w},${y + 20} ${L + w - 4},${y + 20}H${L}Z`, fill: "var(--sc)" }, s);
-      text(s, L + w + 6, y + 16, String(d.w));
-      hover(el("rect", { x: 0, y, width: W, height: rowH, fill: "transparent" }, s), () => `<b>#${d.tag}</b><br>interest weight ${d.w}`);
-    });
-    $("f-sc-tags").innerHTML = `<b>Nothing to go on but my taps.</b> I follow ${st.following} accounts, so Spotlight picks everything. It settled on #${tags[0].tag} first, then relationship drama.`;
     bars("sc-years", SC.years.map((d) => String(d.year)), SC.years.map((d) => d.snaps + d.chats),
       (v) => fmt.format(v) + " snaps + chat messages", "var(--sc)", { axisFmt: (v) => fmt.format(v) });
   })();

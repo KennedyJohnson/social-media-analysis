@@ -1,7 +1,7 @@
 """Aggregate the Snapchat export (data/snapchat) into docs/data_snapchat.js.
 
-Only counts and shares by year / part of the day, the friend/follow totals and Snapchat's own
-Spotlight interest hashtags. No usernames, conversation titles, message content, locations or
+Only counts and shares by year / part of the day, the friend/follow totals and how many Spotlight
+interest hashtags Snapchat has weighted. No usernames, conversation titles, message content, locations or
 individual timestamps. The build fails if any string other than the fixed keys below is written.
 """
 import json
@@ -49,7 +49,6 @@ def main():
     tags = {k.lstrip("#"): int(v) for k, v in rank["Spotlight"][1].items() if v}
     # Keep plain hashtags only (drops anything that isn't a simple lowercase word).
     tags = {k: v for k, v in tags.items() if re.fullmatch(r"[a-z0-9]+", k)}
-    top = sorted(((k, v) for k, v in tags.items() if v >= 2), key=lambda kv: (-kv[1], kv[0]))  # weight 1 is noise
 
     years = sorted(set(snaps.ts.dt.year) | set(chats.ts.dt.year))
     sent_chats = chats[chats.IsSender]
@@ -58,7 +57,6 @@ def main():
         "generated": pd.Timestamp.now().strftime("%Y-%m-%d"),
         "stats": {"friends": int(float(stats["Your Total Friends"])), "following": int(float(stats["The Number of Accounts You Follow"])),
                   "tags_weighted": len(tags), "tags_total": len(rank["Spotlight"][1])},
-        "tags": [{"tag": k, "w": v} for k, v in top],
         "totals": {"snaps": len(snaps), "snaps_sent_share": round(float(snaps.IsSender.mean()), 4),
                    "video_share": round(float((snaps["Media Type"] == "VIDEO").mean()), 4),
                    "chats": len(chats), "chats_sent": len(sent_chats), "conversations": int(chats.convo.nunique()),
@@ -67,8 +65,8 @@ def main():
         "parts": part_shares(pd.concat([snaps[snaps.IsSender].ts, sent_chats.ts])),
     }
 
-    allowed = {k for k, _ in top} | {p for p, _, _ in PARTS} | {out["generated"]} | \
-        {"generated", "stats", "friends", "following", "tags_weighted", "tags_total", "tags", "tag", "w", "totals", "snaps",
+    allowed = {p for p, _, _ in PARTS} | {out["generated"]} | \
+        {"generated", "stats", "friends", "following", "tags_weighted", "tags_total", "totals", "snaps",
          "snaps_sent_share", "video_share", "chats", "chats_sent", "conversations", "top10", "years", "year", "parts", "part", "share"}
     leaked = [s for s in strings(out) if s not in allowed]
     assert not leaked, f"unexpected strings in output: {leaked[:5]}"
