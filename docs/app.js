@@ -131,7 +131,7 @@
     { name: "Instagram likes", color: COL.ig, data: relPeak(ig("growth")) },
   ], { max: 1, y0: 2013 });
   const rdPeakI = RY.upvotes.indexOf(Math.max(...RY.upvotes));
-  $("f-habit").innerHTML = `<b>Reddit faded as Reels arrived.</b> My Reddit upvotes peaked in ${RY.index[rdPeakI]} and all but stopped by 2025, while my Instagram likes took off in ${igPeak.year}, the year after Reels took over my feed. YouTube held steady. Reddit is where I picked the communities and the ranking was the same for everyone; Reels is the most personalized feed here. I didn't plan the switch, but my attention ended up there.`;
+  $("f-habit").innerHTML = `<b>Reddit faded as Reels arrived.</b> Reddit peaked in ${RY.index[rdPeakI]}; Instagram took off in ${igPeak.year}, right after Reels. My attention followed the most personalized feed.`;
 
   const rdW = byYear(RY.index, RY.written);
   lines("talk", [
@@ -141,9 +141,7 @@
   const ytTalkPeak = Y.reduce((b, r) => (r.comments > b.comments ? r : b));
   const ytLate = Y.filter((d) => d.year >= 2022), talkLate = ytLate.reduce((t, d) => t + d.comments + d.live_chats, 0), likeLate = ytLate.reduce((t, d) => t + d.likes, 0);
   const TWt = window.TW && window.TW.totals;
-  $("f-talk").innerHTML = `<b>I went from participant to audience.</b> Since 2022 I've liked about ${fmt.format(Math.round(likeLate / Math.max(1, talkLate)))} YouTube videos for every comment or chat message I've written.` +
-    (TWt ? ` On Twitter I've liked ${fmt.format(TWt.likes)} tweets and posted ${TWt.tweets}, over half of them retweets.` : "") +
-    ` Algorithmic feeds don't need me to say anything; a like, or just watching, is enough signal.`;
+  $("f-talk").innerHTML = `<b>I went from participant to audience.</b> I now like about ${fmt.format(Math.round(likeLate / Math.max(1, talkLate)))} YouTube videos per comment` + (TWt ? `, and I've liked ${fmt.format(TWt.likes)} tweets but posted ${TWt.tweets}` : "") + `.`;
 
   const LQ = TR.lockdown.youtube, lq = Object.keys(LQ);
   bars("lockdown", lq.map((k) => k.replace("Q", " Q")), lq.map((k) => LQ[k]), (v) => fmt.format(v) + " likes", COL.yt, { labelEvery: 2, axisFmt: (v) => fmt.format(Math.round(v)) });
@@ -152,7 +150,7 @@
     el("line", { x1: x, x2: x, y1: 8, y2: 196, stroke: "var(--text-muted)", "stroke-dasharray": "4 4" }, s);
   })();
   const sum = (o, y) => Object.entries(o).filter(([k]) => k.startsWith(y)).reduce((t, [, v]) => t + v, 0);
-  $("f-lockdown").innerHTML = `<b>The pandemic went to YouTube and Reddit, not Instagram.</b> My YouTube likes quadrupled from 2019 to 2020 and my Reddit upvotes hit their all-time high, while Instagram barely moved (${fmt.format(sum(TR.lockdown.instagram, "2019"))} likes in 2019, ${fmt.format(sum(TR.lockdown.instagram, "2020"))} in 2020). The big Instagram jump came two years later with Reels: the feed pulled me in, not the free time.`;
+  $("f-lockdown").innerHTML = `<b>The pandemic went to YouTube and Reddit, not Instagram.</b> Instagram's jump came two years later with Reels: the feed pulled me in, not the free time.`;
 
   // ---- 02 algorithm ---------------------------------------------------------------
   lines("top10", [
@@ -167,27 +165,27 @@
   ], { max: 1 });
   legend("subs-legend", [{ name: "Reddit (subscribed subreddits)", color: COL.rd }, { name: "YouTube (subscribed channels)", color: COL.yt }, { name: "Instagram (followed accounts)", color: COL.ig }]);
   const yt25 = Y.find((d) => d.year === 2025);
-  $("f-algo").innerHTML = `<b>On every platform, my favorites stopped mattering.</b> My top 10 channels and accounts went from most of my likes to under 10%, and almost none of this year's Instagram likes went to accounts I follow. Reddit held out, until I mostly stopped using it.`;
+  $("f-algo").innerHTML = `<b>My favorites stopped mattering.</b> My top 10 creators went from most of my likes to under 10%. Reddit held out until I left.`;
 
   const NA = TR.never_again;
   lines("once", [
     { name: "Instagram accounts", color: COL.ig, data: NA.instagram },
     { name: "YouTube channels", color: COL.yt, data: NA.youtube },
   ], { max: 1, y0: 2016 });
-  $("f-once").innerHTML = `<b>Creators became disposable.</b> By 2025, about four in five accounts and channels I liked for the first time never got a second like. The feed keeps pulling in new creators, and it's the feed I come back to, not any one person on it.`;
+  $("f-once").innerHTML = `<b>Creators became disposable.</b> By 2025, four in five new creators never got a second like.`;
 
   // ---- 03 short-form ---------------------------------------------------------------
   lines("short-chart", [
     { name: "Instagram: Reels", color: COL.ig, data: ig("reel_share") },
     { name: "YouTube: tagged #shorts", color: COL.yt, data: Object.fromEntries(Y.filter((d) => d.year >= 2017).map((d) => [d.year, d.short_share])) },
   ], { max: 1, events: [[2020 + 7 / 12, "Reels"], [2021 + 2 / 12, "Shorts"]] });
-  $("f-short").innerHTML = `<b>The short-video switch took two years on both apps.</b> Reels went from a rounding error to nearly all my Instagram likes; the YouTube line is a floor, since most Shorts carry no tag. Short video is the format where the app picks every single item for you.`;
+  $("f-short").innerHTML = `<b>Short video took over in two years.</b> It's the format where the app picks every item for you.`;
 
   lines("style", [
     { name: "Emoji in title", color: COL.yt, data: TR.emoji.youtube },
     { name: "ALL-CAPS word in title", color: "var(--other)", data: TR.caps.youtube },
   ], { max: 0.5, y0: 2016 });
-  $("f-style").innerHTML = `<b>What gets my like looks different now.</b> ALL-CAPS clickbait titles gave way to emoji: the Shorts style, a short caption and hashtags written for a swipe feed rather than a search result. Emoji in the Instagram captions I liked peaked in 2022, the year Reels took over.`;
+  $("f-style").innerHTML = `<b>Titles are written for the swipe.</b> ALL-CAPS clickbait gave way to emoji and hashtags. AI-written captions may push it further, since chatbots love emoji.`;
 
   // ---- 04 doomscrolling ----------------------------------------------------------------
   const W8 = YT.watch;
@@ -202,14 +200,14 @@
   const parts = [["Morning", 6, 12], ["Afternoon", 12, 17], ["Evening", 17, 22], ["Night", 22, 30]];
   const ytParts = parts.map(([, a, b]) => { let s = 0; for (let h = a; h < b; h++) s += YT.hours[h % 24]; return s; });
   const early = Y.filter((d) => d.year <= 2019), eBinge = early.reduce((t, d) => t + d.binge_share * d.likes, 0) / early.reduce((t, d) => t + d.likes, 0);
-  $("f-doom").innerHTML = `<b>My scrolling went from checking in to sinking in.</b> Up to 2019, ${pct(eBinge, 1)} of my YouTube likes came in runs of 20 or more; by 2025 about a third did, the same year short video became a steady part of what I liked.`;
+  $("f-doom").innerHTML = `<b>From checking in to sinking in.</b> Long runs of 20+ likes went from ${pct(eBinge, 1)} of my YouTube likes to about a third.`;
 
   // ---- 05 feedback ---------------------------------------------------------------------
   lines("neg", [
     { name: "Dislikes", color: COL.yt, data: yt("dislikes") },
     { name: '"Not interested"', color: "var(--s7)", data: yt("not_interested") },
   ], { f: (v) => fmt.format(Math.round(v)), events: [[2021 + 10 / 12, "Dislike counts hidden"]] });
-  $("f-feedback").innerHTML = `<b>My feed hears almost nothing but "yes".</b> Dislikes and "Not interested" taps collapsed after 2021 while I kept liking thousands of videos a year, and I've tapped "Not interested" on Instagram 407 times ever. Hiding dislike counts made the button feel pointless, and swiping past is easier than rejecting. The model learns mostly from what I engage with.`;
+  $("f-feedback").innerHTML = `<b>My feed hears almost nothing but "yes".</b> Dislikes collapsed after 2021, so the model learns from what I engage with.`;
 
   // ---- 06 AI ------------------------------------------------------------------------
   lines("ai-chart", [
@@ -217,7 +215,7 @@
     { name: "Reddit: Science, Tech & Data", color: COL.rd, data: catShare(RD, "Science, Tech & Data") },
     { name: "YouTube: AI in title", color: COL.yt, data: Object.fromEntries(Y.filter((d) => d.year >= 2017).map((d) => [d.year, d.ai_share])) },
   ], { f: (v) => pct(v, 1) });
-  $("f-ai").innerHTML = `<b>More of my feed is about tech and AI</b> on all three platforms, though AI in YouTube titles is still rare. That's partly me (I study data science), not proof the apps pushed it. But the systems ranking my feed and the topic I'm reading about have become the same thing.`;
+  $("f-ai").innerHTML = `<b>More of my feed is about AI</b>, partly because I study data science. The ranking system and the topic are now the same thing.`;
 
   $("yt-ni").textContent = fmt.format(YT.totals.not_interested);
 
@@ -255,7 +253,7 @@
     const taps = IM.tapbacks.slice().sort((a, b) => b.n - a.n);
     const tapTotal = taps.reduce((a, d) => a + d.n, 0);
     bars("im-taps", taps.map((d) => d.type), taps.map((d) => d.n / tapTotal), (v) => pct(v, 1) + " of tapbacks", "var(--im)");
-    $("f-texts").innerHTML = `<b>The opposite of a feed.</b> A feed spreads my attention across thousands of strangers; texting concentrates it on a few people${window.SC ? ", on iMessage and Snapchat alike" : ""}, and I answer them almost instantly. Even my "likes" here, tapbacks, go to people I know.`;
+    $("f-texts").innerHTML = `<b>The opposite of a feed.</b> Feeds spread me across strangers; texting keeps me with a few people.`;
   })();
 
   // ---- 10 · Apple Health -------------------------------------------------------
@@ -298,7 +296,7 @@
     bars("hl-months", S.months.map((d) => mlabel(d.month)), S.months.map((d) => d.per_day), (v) => fmt.format(v) + " steps a day", "var(--hl)", { labelEvery: 6, axisFmt: (v) => fmt.format(v) });
     const night = (name) => series.find((d) => d.name === name).vals[3];
     const nv = series.filter((d) => d.name !== "Steps").map((d) => d.vals[3]), others = `${pct(Math.min(...nv))}–${pct(Math.max(...nv))}`;
-    $("f-health").innerHTML = `<b>Night is the one time the phone has me to itself.</b> Only ${pct(night("Steps"))} of my steps happen after 10pm, against ${others} of my texts and likes.`;
+    $("f-health").innerHTML = `<b>Night belongs to the phone.</b> Only ${pct(night("Steps"))} of my steps happen after 10pm, against ${others} of my texts and likes.`;
   })();
 
   // ---- Snapchat (section 07) --------------------------------------------
@@ -341,6 +339,6 @@
     $("tw-ads-sub").textContent = `The ${T.advertisers} advertisers Twitter lists as having targeted me, grouped by sector`;
 
     const top = C.reduce((a, d) => (d.likes > a.likes ? d : a)), ti = C.reduce((a, d) => (d.interests > a.interests ? d : a));
-    $("f-tw").innerHTML = `<b>Every like is a line in an ad profile.</b> My likes lean ${top.cat}; Twitter's list leans ${ti.cat}, because it names specific games, shows and people that advertisers can buy against. From banks to political PACs, advertisers paid to reach the profile my taps built, and the more I scroll, the more slots there are to sell.`;
+    $("f-tw").innerHTML = `<b>Every like is a line in an ad profile.</b> Twitter's list leans ${ti.cat}, not my ${top.cat}, because that's what advertisers can buy.`;
   })();
 })();
