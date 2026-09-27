@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Feed, Fed</title>
-<meta name="description" content="A data story built from fourteen years of my Instagram, Reddit and YouTube activity: how recommendation algorithms and AI reshaped the way I scroll, and why doomscrolling works for the companies.">
+<meta name="description" content="A data story built from fourteen years of my Instagram, Reddit, YouTube, Twitter, Snapchat and iPhone data: how recommendation algorithms and AI reshaped the way I scroll, and why doomscrolling works for the companies.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -12,18 +12,19 @@
 <body>
 <main>
   <header class="hero">
-    <div class="eyebrow">A personal data story · Instagram · Reddit · YouTube · Snapchat · iMessage · Apple Health</div>
+    <div class="eyebrow">A personal data story · Instagram · Reddit · YouTube · Twitter · Snapchat · iMessage · Apple Health</div>
     <h1>Fourteen years of being fed</h1>
-    <p class="lede">I downloaded everything Instagram, Reddit, Google, Snapchat and my iPhone keep on me and turned it into data. No names, no captions, no messages or searches, just aggregate patterns: how my scrolling changed as recommendation algorithms took over, what AI has to do with it, why "doomscrolling" is such a good business, and where my friends went instead.</p>
+    <p class="lede">I downloaded everything Instagram, Reddit, Google, Twitter, Snapchat and my iPhone keep on me and turned it into data. No names, no captions, no messages or searches, just aggregate patterns: how my scrolling changed as recommendation algorithms took over, what AI has to do with it, why "doomscrolling" is such a good business, and where my friends went instead.</p>
     <div class="tiles" id="tiles"></div>
     <nav class="toc">
-      <a href="#habit">01 · Three apps, one habit</a><a href="#algorithm">02 · Who chose what I saw</a><a href="#short">03 · Short video eats everything</a>
-      <a href="#doom">04 · Doomscrolling</a><a href="#feedback">05 · I stopped saying no</a><a href="#ai">06 · Where AI fits</a><a href="#machine">07 · How the machine sees me</a><a href="#platforms">08 · Platform by platform</a>
+      <a href="#habit">01 · Every app, one habit</a><a href="#algorithm">02 · Who chose what I saw</a><a href="#short">03 · Short video eats everything</a>
+      <a href="#doom">04 · Doomscrolling</a><a href="#feedback">05 · I stopped saying no</a><a href="#ai">06 · Where AI fits</a><a href="#machine">07 · How the machine sees me</a><a href="#money">08 · What my likes are worth</a>
+      <a href="#platforms">09 · Platform by platform</a><a href="#texts">10 · The group chat</a><a href="#health">11 · Offline</a>
     </nav>
   </header>
 
   <section id="habit">
-    <div class="eyebrow">01 · Three apps, one habit</div>
+    <div class="eyebrow">01 · Every app, one habit</div>
     <h2>My attention moved to whichever feed ranked hardest</h2>
     <p>Each line is one platform's activity per year as a share of its own peak year: Reddit upvotes, YouTube likes, and Instagram likes. The absolute numbers aren't comparable (an upvote is cheaper than a like), but the timing is.</p>
     <div class="card">
@@ -35,7 +36,7 @@
     <p class="finding" id="f-habit"></p>
     <div class="card">
       <h3>I stopped talking and just watched</h3>
-      <p class="sub">Things I wrote per year: Reddit posts and comments, YouTube comments and live-chat messages</p>
+      <p class="sub">Things I wrote per year: Reddit posts and comments, YouTube comments and live-chat messages, tweets</p>
       <div class="legend" id="talk-legend"></div>
       <div id="talk"></div>
     </div>
@@ -114,21 +115,7 @@
       <p class="sub">Per year. On Instagram the same share is <span id="ig-binge"></span> across all years.</p>
       <div id="binge"></div>
     </div>
-    <div class="grid2">
-      <div class="card"><h3>When I like YouTube videos</h3><p class="sub" id="hours-sub">Share of likes by hour</p><div id="yt-hours"></div></div>
-      <div class="card"><h3>When I like Instagram posts</h3><p class="sub">Share of likes, since 2023</p><div id="ig-heat"></div></div>
-    </div>
     <p class="finding" id="f-doom"></p>
-    <div class="card">
-      <h3>Why this is good business</h3>
-      <ul class="list">
-        <li><b>Time is inventory.</b> These apps make money from ads, and every extra minute is more ad slots. Ranking systems are trained to predict what keeps you watching, liking and sharing, because that's what fills those slots.</li>
-        <li><b>There's no bottom.</b> The engineer who designed infinite scroll has said he regrets it, comparing endless feeds to "behavioural cocaine" (<a href="https://www.bbc.com/news/technology-44640959">BBC, 2018</a>). With no natural stopping point, the session ends when you decide, not when the content does.</li>
-        <li><b>Unpredictable rewards.</b> Most videos are fine; every so often one is great. That variable payoff keeps you swiping for the next good one, the same pattern slot machines rely on.</li>
-        <li><b>Short clips mean more guesses.</b> A 20-second video gives the model a fresh prediction to make (and a fresh signal to learn from) every few seconds, so it learns what hooks me far faster than an hour-long video ever could.</li>
-        <li><b>Strangers are an endless supply.</b> A feed limited to people I follow runs out. A feed of recommended strangers never does, which is exactly the shift in section 02.</li>
-      </ul>
-    </div>
   </section>
 
   <section id="feedback">
@@ -162,20 +149,7 @@
     <h2>My likes are training data</h2>
     <p>Every like, upvote and skip on this page was also a signal. None of these apps has one "algorithm". Each runs separate ranking systems for its feeds (Instagram's Feed, Stories, Explore and Reels; YouTube's Home, Up Next and Shorts; Reddit's Home and Popular). They work the same basic way: gather a few thousand possible posts, predict what I'll do with each one, and put the best predictions at the top.</p>
 
-    <div class="card">
-      <h3>How a recommendation gets made</h3>
-      <p class="sub">The two-stage design described in YouTube's and Meta's own engineering papers</p>
-      <svg viewBox="0 0 900 150" role="img" aria-label="Billions of posts are narrowed to hundreds of candidates by retrieval, then a ranking model scores each and the top ones fill the feed">
-        <g class="loop">
-          <rect x="10" y="45" width="190" height="60" rx="10"></rect><text x="105" y="72" text-anchor="middle" class="lbl">Every post on</text><text x="105" y="90" text-anchor="middle" class="lbl">the platform</text>
-          <rect x="240" y="45" width="190" height="60" rx="10"></rect><text x="335" y="72" text-anchor="middle" class="lbl">Retrieval: a few hundred</text><text x="335" y="90" text-anchor="middle" class="lbl">that sit near "me"</text>
-          <rect x="470" y="45" width="190" height="60" rx="10"></rect><text x="565" y="72" text-anchor="middle" class="lbl">Ranking: predict watch,</text><text x="565" y="90" text-anchor="middle" class="lbl">like, share, skip</text>
-          <rect x="700" y="45" width="190" height="60" rx="10"></rect><text x="795" y="72" text-anchor="middle" class="lbl">Top predictions</text><text x="795" y="90" text-anchor="middle" class="lbl">fill my screen</text>
-          <path d="M200 75 H236 M430 75 H466 M660 75 H696" marker-end="url(#arrow)"></path>
-        </g>
-        <text x="105" y="30" text-anchor="middle">billions</text><text x="335" y="30" text-anchor="middle">hundreds</text><text x="565" y="30" text-anchor="middle">scored one by one</text><text x="795" y="30" text-anchor="middle">a handful</text>
-      </svg>
-    </div>
+
 
     <div class="card">
       <h3>What I did, and how the ranking system uses it</h3>
@@ -193,12 +167,13 @@
     </div>
 
     <div class="card">
-      <h3>The feedback loop</h3>
+      <h3>How a recommendation gets made, and why it loops</h3>
+      <p class="sub">From billions of posts, retrieval pulls a few hundred that sit near "me", and a ranking model scores each one (the two-stage design in YouTube's and Meta's engineering papers)</p>
       <svg viewBox="0 0 900 150" role="img" aria-label="A loop: I like a post, the model updates its prediction, it shows more similar posts, I like more of them">
         <g class="loop">
           <rect x="10" y="45" width="190" height="60" rx="10"></rect><text x="105" y="80" text-anchor="middle" class="lbl">I like a pet video</text>
           <rect x="240" y="45" width="190" height="60" rx="10"></rect><text x="335" y="72" text-anchor="middle" class="lbl">Model raises its guess</text><text x="335" y="90" text-anchor="middle" class="lbl">that I like pets</text>
-          <rect x="470" y="45" width="190" height="60" rx="10"></rect><text x="565" y="72" text-anchor="middle" class="lbl">More pet videos</text><text x="565" y="90" text-anchor="middle" class="lbl">rank near the top</text>
+          <rect x="470" y="45" width="190" height="60" rx="10"></rect><text x="565" y="72" text-anchor="middle" class="lbl">Retrieval + ranking put</text><text x="565" y="90" text-anchor="middle" class="lbl">more pet videos on top</text>
           <rect x="700" y="45" width="190" height="60" rx="10"></rect><text x="795" y="72" text-anchor="middle" class="lbl">I see more of them,</text><text x="795" y="90" text-anchor="middle" class="lbl">so I like more of them</text>
           <path d="M200 75 H236 M430 75 H466 M660 75 H696" marker-end="url(#arrow)"></path>
           <path d="M795 105 V132 H105 V109" marker-end="url(#arrow)"></path>
@@ -229,22 +204,49 @@
         <li><b>Shares.</b> Instagram names resharing as one of its most important predictions. I went from sending about 4 reels for every 100 I liked in 2022 to about 11 in 2025. Friends' posts are about 8% of what I send but only 3% of what I like: sharing is the more social signal.</li>
         <li><b>Everything I scrolled past.</b> Instagram's download covers only two weeks of what I viewed; I liked about 1 in 3. YouTube's keeps a few months of watch history, and most of those videos came from channels I don't subscribe to. The systems learned from everything I didn't like too.</li>
         <li><b>Telling it "no".</b> 407 "Not interested" taps on Instagram and <span id="yt-ni"></span> on YouTube, against tens of thousands of likes. The most common topic I rejected on Instagram was fitness, which is also about 10% of what I like: to the system, the fitness posts I like and the ones I reject sit in different neighborhoods.</li>
-        <li><b>Advertising.</b> Instagram's download lists <b>5,311 advertisers</b> that uploaded a customer list matched to my profile. The ranking and ad systems learn from the same behavior.</li>
         <li><b>Still missing: watch time.</b> The signal Reels and Shorts weigh most is whether I watch to the end or swipe away within seconds. No file in any of my downloads records how long I watched anything.</li>
       </ul>
       <p class="small muted">Sources: Adam Mosseri, <a href="https://about.instagram.com/blog/announcements/instagram-ranking-explained">Instagram Ranking Explained</a> (2023); Meta Transparency Center, <a href="https://transparency.meta.com/features/explaining-ranking/ig-reels-chaining/">Instagram Reels system card</a>; Meta AI, <a href="https://ai.meta.com/blog/learning-from-videos-to-understand-the-world/">Learning from videos to understand the world</a> (2021); Engineering at Meta, <a href="https://engineering.fb.com/2023/08/09/ml-applications/scaling-instagram-explore-recommendations-system/">Scaling the Instagram Explore recommendations system</a> (2023); Covington, Adams &amp; Sargin, <a href="https://research.google/pubs/deep-neural-networks-for-youtube-recommendations/">Deep Neural Networks for YouTube Recommendations</a> (RecSys 2016); YouTube, <a href="https://blog.youtube/inside-youtube/on-youtubes-recommendation-system/">On YouTube's recommendation system</a> (2021); Reddit, <a href="https://support.reddithelp.com/hc/en-us/articles/4402284777364-What-are-home-feed-recommendations">What are home feed recommendations</a>.</p>
     </div>
   </section>
 
+  <section id="money">
+    <div class="eyebrow">08 · Follow the money</div>
+    <h2>What my likes are worth</h2>
+    <p>The same taps that rank my feed also build an ad profile. Twitter's archive is the bluntest about it: alongside every like it lists the interests it inferred, the advertisers who targeted me, and how many ad audiences I'm in. Instagram lists every advertiser that matched me to a customer list.</p>
+    <div class="tiles" id="money-tiles"></div>
+    <div class="card">
+      <h3><span class="plat" style="color:var(--tw)">Twitter</span>From likes to an ad profile</h3>
+      <h3>What I liked vs. what Twitter decided I'm into</h3>
+      <p class="sub">The 8 topics where they differ most, by share, using the same category model as Instagram. Only tweets with enough text are categorized; sensitive categories withheld.</p>
+      <div class="legend" id="tw-compare-legend"></div>
+      <div id="tw-compare"></div>
+      <h3>Who paid to reach me</h3>
+      <p class="sub" id="tw-ads-sub"></p>
+      <div id="tw-ads"></div>
+      <p class="finding" id="f-tw"></p>
+    </div>
+    <div class="card">
+      <h3>Why this is good business</h3>
+      <ul class="list">
+        <li><b>Time is inventory.</b> These apps make money from ads, and every extra minute is more ad slots. Ranking systems are trained to predict what keeps you watching, liking and sharing, because that's what fills those slots.</li>
+        <li><b>There's no bottom.</b> The engineer who designed infinite scroll has said he regrets it, comparing endless feeds to "behavioural cocaine" (<a href="https://www.bbc.com/news/technology-44640959">BBC, 2018</a>). With no natural stopping point, the session ends when you decide, not when the content does.</li>
+        <li><b>Unpredictable rewards.</b> Most videos are fine; every so often one is great. That variable payoff keeps you swiping for the next good one, the same pattern slot machines rely on.</li>
+        <li><b>Short clips mean more guesses.</b> A 20-second video gives the model a fresh prediction to make (and a fresh signal to learn from) every few seconds, so it learns what hooks me far faster than an hour-long video ever could.</li>
+        <li><b>Strangers are an endless supply.</b> A feed limited to people I follow runs out. A feed of recommended strangers never does, which is exactly the shift in section 02.</li>
+      </ul>
+    </div>
+  </section>
+
   <section id="platforms">
-    <div class="eyebrow">08 · Platform by platform</div>
+    <div class="eyebrow">09 · Platform by platform</div>
     <h2>What I've been into</h2>
     <p>The biggest shift in interests on each platform. Instagram posts were categorized with sentence embeddings of their captions; Reddit subreddits were hand-labelled.</p>
     <div class="card">
       <h3><span class="plat" style="color:var(--ig)">Instagram</span>Friends out, animals in</h3>
       <p class="sub">Share of my likes per year for the two categories that swapped places</p>
       <div class="legend" id="ig-cat-legend"></div><div id="ig-cat-chart"></div>
-      <p class="finding"><b>From friends to animals.</b> Friends' posts went from 17% of my likes in 2019 to about 3% since 2023, while Pets &amp; Animals became the biggest category at about one in five.</p>
+      <p class="finding"><b>From friends to animals.</b> Friends' posts went from 17% of my likes in 2019 to about 3% since 2023, while Pets &amp; Animals became the biggest category at about one in five. The captions I liked also turned less positive: negative ones rose from 8% to 13%.</p>
     </div>
     <div class="card">
       <h3><span class="plat" style="color:var(--rd)">Reddit</span>Memes out, "interesting" in</h3>
@@ -252,16 +254,10 @@
       <div class="legend" id="rd-cat-legend"></div><div id="rd-cat-chart"></div>
       <p class="finding"><b>From memes to "interesting".</b> Memes were 40% of my upvotes in 2017 and 6–9% by 2025; viral and interesting posts took their place.</p>
     </div>
-    <div class="card">
-      <h3><span class="plat" style="color:var(--ig)">Instagram</span>The mood of my feed</h3>
-      <p class="sub">Average caption sentiment per year (RoBERTa, −1 to +1)</p>
-      <div id="sent"></div>
-      <p class="finding"><b>Positive, but less so every year</b>, and the share of negative captions rose from 8% to 13%.</p>
-    </div>
   </section>
 
   <section id="texts">
-    <div class="eyebrow">09 · The group chat</div>
+    <div class="eyebrow">10 · The group chat</div>
     <h2>My friends didn't leave. They moved to the group chat</h2>
     <p>Friends' posts nearly vanished from my Instagram likes, so I pulled a year of iMessages to see where they went. No ranking model here: just people I chose, in the order they wrote.</p>
     <div class="tiles" id="im-tiles"></div>
@@ -271,30 +267,15 @@
       <div id="im-conc"></div>
     </div>
     <div class="card">
-      <h3>When I text</h3>
-      <p class="sub">Share of the texts I sent, by part of the day</p>
-      <div id="im-hours"></div>
-    </div>
-    <div class="card">
       <h3>The like button, inside friendships</h3>
       <p class="sub">Tapbacks I gave, by type</p>
       <div id="im-taps"></div>
-    </div>
-    <div class="card">
-      <h3>Texts I sent per month</h3>
-      <p class="sub" id="im-months-sub"></p>
-      <div id="im-months"></div>
-    </div>
-    <div class="card">
-      <h3><span class="plat" style="color:var(--sc)">Snapchat</span>The other group chat</h3>
-      <p class="sub">Snaps and chats per year (the export keeps saved and recent ones only)</p>
-      <div id="sc-years"></div>
     </div>
     <p class="finding" id="f-texts"></p>
   </section>
 
   <section id="health">
-    <div class="eyebrow">10 · Offline</div>
+    <div class="eyebrow">11 · Offline</div>
     <h2>What my phone knows when I'm not looking at it</h2>
     <p>My phone counts steps whether or not I'm on it, so Apple Health records the hours the feeds <i>didn't</i> get. Steps are from the phone only, to avoid double counting with the watch.</p>
     <div class="tiles" id="hl-tiles"></div>
@@ -313,7 +294,16 @@
   </section>
 
   <footer>
-    <p><b>Data.</b> Instagram "Download your information" (HTML), Reddit data request (CSV) and Google Takeout (YouTube activity), and the Messages database from a local iPhone backup (the phone keeps one year of messages), which also held the Apple Health data. Snapchat "My Data" export (JSON). YouTube's export keeps likes, dislikes, subscriptions and "Not interested" taps back to 2012 but only the last few months of watch history. Times are US Central.</p>
+    <p><b>Data.</b></p>
+    <ul class="list small">
+      <li>Instagram: "Download your information" (HTML)</li>
+      <li>Reddit: data request (CSV)</li>
+      <li>YouTube: Google Takeout activity (likes, dislikes, subscriptions and "Not interested" back to 2012; watch history for the last few months only)</li>
+      <li>Twitter: "Download an archive of your data" (likes, tweets and the ad-interest file)</li>
+      <li>Snapchat: "My Data" export (JSON)</li>
+      <li>iMessage and Apple Health: a local iPhone backup (the phone keeps one year of messages)</li>
+    </ul>
+    <p>Times are US Central.</p>
     <p><b>Method.</b> Reddit votes aren't dated, so each is dated by interpolating Reddit's sequential IDs between my own dated posts. Instagram categories come from <code>all-MiniLM-L6-v2</code> embeddings, sentiment from <code>twitter-roberta-base-sentiment-latest</code>. Sessions are runs of likes under 10 minutes apart.</p>
     <p><b>Privacy.</b> Only aggregates are published: counts and shares by year, hour and category. No account, channel or subreddit names, captions, titles, searches, contacts, chat names, message text, health records beyond step and sleep totals, or individual timestamps. Raw exports stay on my machine, and each build fails if unexpected text reaches the page data. Code: <a href="https://github.com/KennedyJohnson/social-media-analysis">github.com/KennedyJohnson/social-media-analysis</a> · <a href="https://kennedyjohnson.github.io/">kennedyjohnson.github.io</a></p>
   </footer>
@@ -326,6 +316,7 @@
 <script src="data_imessage.js"></script>
 <script src="data_health.js"></script>
 <script src="data_snapchat.js"></script>
+<script src="data_twitter.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

@@ -17,6 +17,7 @@ docs/                 the site (index.html, app.js, style.css, data_*.js)
 instagram/scripts/    parse → classify → signals → build  → docs/data_instagram.js
 reddit/scripts/       parse → classify → build             → docs/data_reddit.js
 youtube/scripts/      parse → build                        → docs/data_youtube.js
+twitter/scripts/      build                                → docs/data_twitter.js
 ```
 
 ## Pipeline
@@ -38,6 +39,9 @@ python reddit/scripts/build_site_data.py "path/to/reddit-export"
 # YouTube (Google Takeout; pass every extracted Takeout folder)
 python youtube/scripts/parse_export.py "path/to/Takeout" ["path/to/Takeout-2" ...]
 python youtube/scripts/build_site_data.py
+
+# X/Twitter (Settings → Download an archive); copy like.js, tweets.js, personalization.js, account.js into data/twitter/
+python twitter/scripts/build_site_data.py
 
 # Cross-platform trends (after the parse steps)
 python scripts/cross_platform.py
