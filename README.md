@@ -57,3 +57,10 @@ python -m http.server -d docs 8000
 - **Sessions:** consecutive likes less than 10 minutes apart. Scrolling without liking is invisible, so this undercounts.
 - **Algorithm signals:** per year, share of likes on my top 10 accounts/channels, on accounts or communities I follow, on new accounts, and on short-form video.
 - Sensitive categories (dating, health, adult) are withheld.
+
+## Tools used
+
+- Python
+- pandas
+- Transformers
+- JavaScript
