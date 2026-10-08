@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,7 @@
 <meta name="description" content="A data story built from fourteen years of my Instagram, Reddit, YouTube, Twitter, Snapchat and iPhone data: how recommendation algorithms and AI reshaped the way I scroll, and why doomscrolling works for the companies.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 <main>
@@ -319,6 +319,7 @@
     </ul>
     <p><b>Method.</b> Reddit votes aren't dated, so each is dated by interpolating Reddit's sequential IDs between my own dated posts. Instagram categories come from <code>all-MiniLM-L6-v2</code> embeddings, sentiment from <code>twitter-roberta-base-sentiment-latest</code>. Sessions are runs of likes under 10 minutes apart.</p>
     <p><b>Privacy.</b> Only aggregates are published: counts and shares by year, hour and category. No account, channel or subreddit names, captions, titles, searches, contacts, chat names, message text, health records beyond step and sleep totals, or individual timestamps. Raw exports stay on my machine, and each build fails if unexpected text reaches the page data. Code: <a href="https://github.com/KennedyJohnson/social-media-analysis">github.com/KennedyJohnson/social-media-analysis</a> · <a href="https://kennedyjohnson.github.io/">kennedyjohnson.github.io</a></p>
+    <p><b>Code.</b> <a href="https://github.com/KennedyJohnson/social-media-analysis">GitHub</a> · <a href="https://kennedyjohnson.github.io/">Back to portfolio</a></p>
   </footer>
 </main>
 <div class="tip" id="tip"></div>
