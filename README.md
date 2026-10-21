@@ -1,6 +1,6 @@
 # social-media-analysis
 
-A data story built from fourteen years of my Instagram, Reddit and YouTube activity: how recommendation algorithms and AI reshaped the way I scroll, and why doomscrolling works for the companies behind the feeds.
+A data story built from fourteen years of my Instagram, Reddit, YouTube, X/Twitter, Snapchat and iMessage activity, plus Apple Health: how recommendation algorithms and AI reshaped the way I scroll, and why doomscrolling works for the companies behind the feeds.
 
 **Live site:** https://kennedyjohnson.github.io/social-media-analysis/ (a static page in `docs/`, no build step)
 
@@ -8,7 +8,7 @@ This repo merges the former `instagram-likes-analysis` and `reddit-activity-anal
 
 ## Privacy
 
-Only aggregates are published: counts and shares by year, hour and category. No account, channel or subreddit names, captions, titles, searches, messages or individual timestamps. Raw exports and everything derived per item live in each platform's `data/` folder, which is gitignored. The Reddit and YouTube builds fail if any unexpected string reaches the page data.
+Only aggregates are published: counts and shares by year, hour and category. No account, channel or subreddit names, captions, titles, searches, messages or individual timestamps. Raw exports and everything derived per item live in `data/` folders (a platform's own, or the top-level one for X, Snapchat, iMessage and Health), which are all gitignored. Every build fails if any unexpected string reaches the page data.
 
 ## Layout
 
@@ -18,6 +18,10 @@ instagram/scripts/    parse → classify → signals → build  → docs/data_in
 reddit/scripts/       parse → classify → build             → docs/data_reddit.js
 youtube/scripts/      parse → build                        → docs/data_youtube.js
 twitter/scripts/      build                                → docs/data_twitter.js
+snapchat/scripts/     build                                → docs/data_snapchat.js
+imessage/scripts/     build                                → docs/data_imessage.js
+health/scripts/       build                                → docs/data_health.js
+scripts/              cross_platform                       → docs/data_trends.js
 ```
 
 ## Pipeline
@@ -42,6 +46,15 @@ python youtube/scripts/build_site_data.py
 
 # X/Twitter (Settings → Download an archive); copy like.js, tweets.js, personalization.js, account.js into data/twitter/
 python twitter/scripts/build_site_data.py
+
+# Snapchat (Settings → My Data); extract the export into data/snapchat/
+python snapchat/scripts/build_site_data.py
+
+# iMessage: copy the Messages database to data/imessage/sms.db
+python imessage/scripts/build_site_data.py
+
+# Apple Health (steps and time in bed only): put the HealthDomain folder in data/iphone/HealthDomain/
+python health/scripts/build_site_data.py
 
 # Cross-platform trends (after the parse steps)
 python scripts/cross_platform.py

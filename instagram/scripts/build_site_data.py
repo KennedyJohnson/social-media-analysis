@@ -4,6 +4,7 @@ Only aggregates are published: counts and shares by time and category.
 No account names, captions, URLs or individual timestamps leave data/.
 """
 import json
+import re
 from pathlib import Path
 
 import numpy as np
@@ -20,6 +21,18 @@ def gini(counts):
     x = np.sort(np.asarray(counts, dtype=float))
     n = len(x)
     return float((2 * np.arange(1, n + 1) - n - 1) @ x / (n * x.sum())) if n else 0.0
+
+
+def strings(x):
+    """Every string value in a nested dict/list (keys are fixed by this script, so they are skipped)."""
+    if isinstance(x, str):
+        yield x
+    elif isinstance(x, dict):
+        for v in x.values():
+            yield from strings(v)
+    elif isinstance(x, list):
+        for v in x:
+            yield from strings(v)
 
 
 def comment_stats(likes, known, n_weeks):
@@ -192,6 +205,13 @@ def main():
                ("Evening", "5–10pm", range(17, 22)), ("Night", "10pm–6am", [22, 23, 0, 1, 2, 3, 4, 5])]
     out["time_of_day"] = [{"label": n, "hours": h, "share": round(float(recent_hours.isin(list(r)).mean()), 3)}
                           for n, h, r in buckets]
+    # Leak guard, like the other platforms: every published string must be a date or a label this script
+    # defines. Category names come from classify.py's fixed list (private ones were already set to "Unclear").
+    allowed = set(likes.category) | {n for n, _, _ in buckets} | {h for _, h, _ in buckets} | {
+        "Comment liked first", "Same minute", "Within 5 min", "5 to 60 min later", "Over an hour later"}
+    date = re.compile(r"\d{4}(-\d{2}(-\d{2})?|Q[1-4])?")
+    leaked = sorted({s for s in strings(out) if s not in allowed and not date.fullmatch(s)})
+    assert not leaked, f"unexpected strings in output: {leaked[:5]}"
     DOCS.mkdir(exist_ok=True)
     (DOCS / "data_instagram.js").write_text("window.IG = " + json.dumps(out, separators=(",", ":")) + ";\n", encoding="utf-8")
     print(json.dumps({k: out[k] for k in ["totals", "time_of_day"]}, indent=1, default=str))
