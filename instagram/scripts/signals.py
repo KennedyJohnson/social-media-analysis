@@ -59,6 +59,8 @@ def shares(root):
         found = MSG.findall(t)
         presence.update({s for s, _, _ in found})
         msgs.extend(found)
+    if not presence:
+        return pd.DataFrame(columns=["ts", "code", "text"])  # fresh/empty export: no DMs at all
     me = presence.most_common(1)[0][0]
     rows = []
     for sender, body, when in msgs:

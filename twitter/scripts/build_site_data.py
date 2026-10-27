@@ -59,6 +59,8 @@ def categorize(model, texts, cat_emb, names):
 def shares(cats):
     c = Counter(x for x in cats if x != "Unclear" and x not in WITHHELD)
     n = sum(c.values())
+    if not n:
+        return {}, 0  # everything was filtered (all "Unclear"/withheld)
     return {k: round(v / n, 4) for k, v in c.items()}, n
 
 

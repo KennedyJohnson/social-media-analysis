@@ -38,7 +38,11 @@ def parse_time(s):
 
 def parse_likes(root):
     s = (root / "your_instagram_activity/likes/liked_posts.html").read_text(encoding="utf-8")
-    s = s[s.find("<main"):]
+    i = s.find("<main")
+    if i < 0:
+        # find() returns -1 and s[-1:] would silently keep one character, producing an empty frame
+        raise ValueError("liked_posts.html has no <main> section; the export layout changed")
+    s = s[i:]
     rows, start = [], 0
     for m in ENTRY_END.finditer(s):
         block = s[start:m.start()]
